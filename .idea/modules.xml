@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Avina-Clean-Water.iml" filepath="$PROJECT_DIR$/Avina-Clean-Water.iml" />
+      <module fileurl="file://$PROJECT_DIR$/odk-collect/odk-collect.iml" filepath="$PROJECT_DIR$/odk-collect/odk-collect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/odk-collect-clean-water-app/odk-collect-clean-water-app.iml" filepath="$PROJECT_DIR$/odk-collect-clean-water-app/odk-collect-clean-water-app.iml" />
+    </modules>
+  </component>
+</project>
+
