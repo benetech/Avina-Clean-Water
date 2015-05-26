@@ -75,21 +75,21 @@
             android:configChanges="orientation"
             android:label="@string/app_name" >
         </activity>
-        <activity
-            android:name=".activities.FormEntryActivity"
-            android:configChanges="orientation"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <action android:name="android.intent.action.EDIT" />
+        <!--<activity-->
+            <!--android:name=".activities.FormEntryActivity"-->
+            <!--android:configChanges="orientation"-->
+            <!--android:label="@string/app_name"-->
+            <!--android:windowSoftInputMode="adjustResize" >-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
+                <!--<action android:name="android.intent.action.EDIT" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
 
-                <data android:mimeType="vnd.android.cursor.item/vnd.odk.form" />
-                <data android:mimeType="vnd.android.cursor.item/vnd.odk.instance" />
-            </intent-filter>
-        </activity>
+                <!--<data android:mimeType="vnd.android.cursor.item/vnd.odk.form" />-->
+                <!--<data android:mimeType="vnd.android.cursor.item/vnd.odk.instance" />-->
+            <!--</intent-filter>-->
+        <!--</activity>-->
         <activity 
             android:name=".activities.NotificationActivity"
             android:label="@string/app_name"

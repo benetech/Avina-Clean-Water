@@ -1062,7 +1062,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 			return startView;
 		case FormEntryController.EVENT_END_OF_FORM:
-			View endView = View.inflate(this, R.layout.form_entry_end, null);
+			View endView = inflateFormEntryEndView();
 			((TextView) endView.findViewById(R.id.description))
 					.setText(getString(R.string.save_enter_data_description,
 							formController.getFormTitle()));
@@ -1240,7 +1240,11 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		}
 	}
 
-	@Override
+    protected View inflateFormEntryEndView() {
+        return View.inflate(this, R.layout.form_entry_end, null);
+    }
+
+    @Override
 	public boolean dispatchTouchEvent(MotionEvent mv) {
 		boolean handled = mGestureDetector.onTouchEvent(mv);
 		if (!handled) {
