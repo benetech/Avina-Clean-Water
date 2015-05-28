@@ -1,6 +1,7 @@
 package org.cleanwater.android.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 
@@ -12,6 +13,8 @@ import org.odk.collect.android.activities.FormEntryActivity;
  */
 public class CleanWaterFormEntryActivity extends FormEntryActivity {
 
+    public static final String CURRENT_FORM_URI_TAG = "CurrentFormUri";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +25,9 @@ public class CleanWaterFormEntryActivity extends FormEntryActivity {
     }
 
     public void onSeeResults(View view) {
+        Uri uri = getIntent().getData();
         Intent intent = new Intent(this, ResultsActivity.class);
+        intent.putExtra(CURRENT_FORM_URI_TAG, uri.toString());
         startActivity(intent);
     }
 }
