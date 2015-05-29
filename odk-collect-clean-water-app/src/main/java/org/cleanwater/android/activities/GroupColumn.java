@@ -7,10 +7,12 @@ import java.util.Set;
  * Created by animal@martus.org on 5/28/15.
  */
 public class GroupColumn {
+    private String groupReference;
     private String groupName;
     private LinkedHashMap<String, String> questionsToAnswerRowsMap;
 
-    public GroupColumn(String groupNameToUse) {
+    public GroupColumn(String groupReferenceToUse, String groupNameToUse) {
+        groupReference = groupReferenceToUse;
         groupName = groupNameToUse;
         questionsToAnswerRowsMap = new LinkedHashMap();
     }
@@ -19,8 +21,21 @@ public class GroupColumn {
         questionsToAnswerRowsMap.put(question, answer);
     }
 
+    public String getGroupReference() {
+        return groupReference;
+    }
+
     public String getGroupName() {
         return groupName;
+    }
+
+    public float calculatePercentage() {
+        float questionsWithAnswersCount = getQuestionsWithAnswersCount();
+        float questionCount = getQuestionCount();
+        if (questionsWithAnswersCount == 0)
+            return 0;
+
+        return questionsWithAnswersCount / questionCount;
     }
 
     public int getQuestionsWithAnswersCount() {
@@ -35,6 +50,10 @@ public class GroupColumn {
         }
 
         return questionsWithAnswersCount;
+    }
+
+    public int calculateScore() {
+        return getQuestionsWithAnswersCount() * 2;
     }
 
     public int getQuestionCount() {

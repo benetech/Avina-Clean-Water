@@ -3,5 +3,19 @@
 
     <string name="app_name">Clean Water</string>
     <string name="action_settings">Settings</string>
+    <string name="scores_column_name">Scores</string>
+    <string name="variables_column_name">Variables</string>
+    <string name="score_column_name">Score</string>
+    <string name="percent_column_name">Percent</string>
+    <string name="stage_column_name">Stage</string>
+    <string name="total_row_name">Total</string>
+    <string name="non_applicable">n/a</string>
+    <string name="rising_label">rising</string>
+    <string name="moderate_expansion_label">moderate expansion</string>
+    <string name="advanced_expansion_label">advanced expansion</string>
+    <string name="consolidation_label">consolidation</string>
+    <string name="pound_label">#</string>
+    <string name="number_of_questions_label"># of\nquestions</string>
+    <string name="max_number_of_points">Maximum #\nof points</string>
 
 </resources>

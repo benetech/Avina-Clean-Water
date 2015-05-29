@@ -3,4 +3,9 @@
 
     <color name="barchart_color">#ff2a6dfb</color>
 
+    <color name="rising_color">#fffb0c14</color>
+    <color name="moderate_expansion_color">#fffb901a</color>
+    <color name="advanced_expansion_color">#fffbf60a</color>
+    <color name="consolidation_color">#ff30ba28</color>
+
 </resources>
