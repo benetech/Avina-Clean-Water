@@ -15,4 +15,9 @@ public class SummaryCellConsolidationValues extends AbstractSummaryCellValues {
     public int getColorResourceId() {
         return R.color.consolidation_color;
     }
+
+    @Override
+    public boolean isConsolidatedCell() {
+        return true;
+    }
 }

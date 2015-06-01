@@ -15,4 +15,9 @@ public class SummaryCellRisingValues extends AbstractSummaryCellValues {
     public int getColorResourceId() {
         return R.color.rising_color;
     }
+
+    @Override
+    public boolean isRisingCell() {
+        return true;
+    }
 }

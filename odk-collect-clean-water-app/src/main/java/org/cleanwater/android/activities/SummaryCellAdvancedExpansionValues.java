@@ -15,4 +15,9 @@ public class SummaryCellAdvancedExpansionValues extends AbstractSummaryCellValue
     public int getColorResourceId() {
         return R.color.advanced_expansion_color;
     }
+
+    @Override
+    public boolean isAdvancedExpantionCell() {
+        return true;
+    }
 }

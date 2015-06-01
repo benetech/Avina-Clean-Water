@@ -29,13 +29,21 @@ public class GroupColumn {
         return groupName;
     }
 
-    public float calculatePercentage() {
+    public float calculatePercentageAsDecimal() {
         float questionsWithAnswersCount = getQuestionsWithAnswersCount();
         float questionCount = getQuestionCount();
         if (questionsWithAnswersCount == 0)
             return 0;
 
         return questionsWithAnswersCount / questionCount;
+    }
+
+    public float calculatePercentage() {
+        return calculatePercentageAsDecimal() * 100;
+    }
+
+    public int calculatePercentageAsRoundedInt() {
+        return Math.round(calculatePercentage());
     }
 
     public int getQuestionsWithAnswersCount() {
@@ -58,5 +66,9 @@ public class GroupColumn {
 
     public int getQuestionCount() {
         return questionsToAnswerRowsMap.size();
+    }
+
+    public int getTotalPossibleScore() {
+        return getQuestionCount() * 2;
     }
 }

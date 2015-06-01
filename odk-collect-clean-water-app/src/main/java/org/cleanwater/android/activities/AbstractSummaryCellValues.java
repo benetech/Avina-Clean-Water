@@ -8,4 +8,20 @@ import android.graphics.Color;
 abstract public class AbstractSummaryCellValues {
     abstract public int getLabelResourceId();
     abstract public int getColorResourceId();
+
+    public boolean isModerateExpansionCell() {
+        return false;
+    }
+
+    public boolean isAdvancedExpantionCell() {
+        return false;
+    }
+
+    public boolean isRisingCell() {
+        return false;
+    }
+
+    public boolean isConsolidatedCell() {
+        return false;
+    }
 }

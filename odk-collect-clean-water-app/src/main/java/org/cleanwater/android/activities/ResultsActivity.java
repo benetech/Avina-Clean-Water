@@ -92,12 +92,73 @@ public class ResultsActivity extends Activity {
         allRows.add(createTableTitleHeaderRow());
         allRows.add(createScoresDetailsColumnHeadersRows());
 
+        LinkedHashMap<String, String> groupReferenceToNameMap = getGroupReferences();
+        Set<String> groupReferences = groupReferenceToNameMap.keySet();
+        String[] groupReferencesAsArray = groupReferences.toArray(new String[0]);
+        for (int index = 0; index < groupReferencesAsArray.length; ++index) {
+            String groupReference = groupReferencesAsArray[index];
+            TableRow tableRow = new TableRow(this);
 
-        TableLayout table = (TableLayout) findViewById(R.id.scores_details_table);
+            TextView indexCell = new TextView(this);
+            TextView variableCell = new TextView(this);
+            TextView numberOfScoresCell = new TextView(this);
+            TextView maxScoreCell = new TextView(this);
+
+            TextView risingCell = new TextView(this);
+            TextView moderateExpansionCell = new TextView(this);
+            TextView advancedExpansionCell = new TextView(this);
+            TextView consolidatedCell = new TextView(this);
+
+            indexCell.setText(Integer.toString(index + 1));
+            variableCell.setText(groupReferenceToNameMap.get(groupReference));
+
+            GroupColumn groupColumn = findGroupColumn(groupReference, groupColumns);
+            if (groupColumn != null) {
+                numberOfScoresCell.setText(Integer.toString(groupColumn.calculateScore()));
+                maxScoreCell.setText(Integer.toString(groupColumn.getTotalPossibleScore()));
+                int percentage = groupColumn.calculatePercentageAsRoundedInt();
+                AbstractSummaryCellValues summaryCellValues = getSummaryCellValues(percentage);
+                if (summaryCellValues != null) {
+                    if (summaryCellValues.isRisingCell())
+                        configureCell(risingCell, percentage, summaryCellValues);
+                    else if (summaryCellValues.isModerateExpansionCell())
+                        configureCell(moderateExpansionCell, percentage, summaryCellValues);
+                    else if (summaryCellValues.isAdvancedExpantionCell())
+                        configureCell(advancedExpansionCell, percentage, summaryCellValues);
+                    else if (summaryCellValues.isConsolidatedCell())
+                        configureCell(consolidatedCell, percentage, summaryCellValues);
+                }
+
+            }
+
+            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            tableRow.setLayoutParams(layoutParams);
+
+
+            tableRow.addView(indexCell);
+            tableRow.addView(variableCell);
+            tableRow.addView(numberOfScoresCell);
+            tableRow.addView(maxScoreCell);
+            tableRow.addView(risingCell);
+            tableRow.addView(moderateExpansionCell);
+            tableRow.addView(advancedExpansionCell);
+            tableRow.addView(consolidatedCell);
+
+            allRows.add(tableRow);
+        }
+
+
+            TableLayout table = (TableLayout) findViewById(R.id.scores_details_table);
         for (int index = 0; index < allRows.size(); ++index) {
             TableRow tableRow = allRows.get(index);
             table.addView(tableRow, index);
         }
+    }
+
+    private void configureCell(TextView risingCell, int percentage, AbstractSummaryCellValues summaryCellValues) {
+        risingCell.setBackgroundColor(getResources().getColor(summaryCellValues.getColorResourceId()));
+        risingCell.setGravity(Gravity.CENTER);
+        risingCell.setText(Integer.toString(percentage));
     }
 
     private void fillScoresSummaryTable(ArrayList<GroupColumn> groupColumns) {
@@ -134,7 +195,7 @@ public class ResultsActivity extends Activity {
                 scoreCell.setText(Integer.toString(groupColumn.calculateScore()));
 
                 IntegerPercentFormatter formatter = new IntegerPercentFormatter();
-                final float calculatedPercentage = groupColumn.calculatePercentage();
+                final float calculatedPercentage = groupColumn.calculatePercentageAsDecimal();
                 totalPercentages += calculatedPercentage;
                 String formattedPercentValue = formatter.getFormattedValue(calculatedPercentage);
                 percentCell.setText(formattedPercentValue);
@@ -327,7 +388,7 @@ public class ResultsActivity extends Activity {
         float totalPercentage = 0;
         for (int index = 0; index < groupColumns.size(); ++index) {
             GroupColumn groupColumn = groupColumns.get(index);
-            float percentOfQuestionsWithAnswers = groupColumn.calculatePercentage();
+            float percentOfQuestionsWithAnswers = groupColumn.calculatePercentageAsDecimal();
             totalPercentage += percentOfQuestionsWithAnswers;
             BarEntry barEntry = new BarEntry(percentOfQuestionsWithAnswers, index);
             barEntries.add(barEntry);

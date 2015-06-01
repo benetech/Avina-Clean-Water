@@ -15,4 +15,9 @@ public class SummaryCellModerateExpansionValues extends AbstractSummaryCellValue
     public int getColorResourceId() {
         return R.color.moderate_expansion_color;
     }
+
+    @Override
+    public boolean isModerateExpansionCell() {
+        return true;
+    }
 }
