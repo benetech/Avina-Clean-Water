@@ -18,6 +18,17 @@
             android:stretchColumns="*"
             />
 
+        <TextView
+            android:id="@+id/line1"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:paddingTop="50dip"
+            android:paddingBottom="50dip"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/connect_help"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/separator" />
+
         <TableLayout
             android:id="@+id/scores_summary_table"
             android:layout_width="match_parent"
@@ -26,6 +37,16 @@
             android:shrinkColumns="*"
             android:stretchColumns="*"
             />
+
+        <TextView
+            android:id="@+id/line2"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:paddingTop="50dip"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/connect_help"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/separator" />
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/results_bar_chart"

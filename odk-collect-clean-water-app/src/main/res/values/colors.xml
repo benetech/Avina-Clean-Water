@@ -7,5 +7,6 @@
     <color name="moderate_expansion_color">#fffb901a</color>
     <color name="advanced_expansion_color">#fffbf60a</color>
     <color name="consolidation_color">#ff30ba28</color>
+    <color name="separator">#ff2a6dfb</color>
 
 </resources>

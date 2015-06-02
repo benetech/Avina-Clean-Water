@@ -5,7 +5,10 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.Gallery;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryModel;
 import org.javarosa.form.api.FormEntryPrompt;
 import org.odk.collect.android.logic.FormController;
+import org.w3c.dom.Text;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -32,6 +36,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+
+import static android.widget.TableRow.*;
 
 /**
  * Created by animal@martus.org on 5/26/15.
@@ -89,7 +95,7 @@ public class ResultsActivity extends Activity {
 
     private void fillScoresDetailsTable(ArrayList<GroupColumn> groupColumns) {
         ArrayList<TableRow> allRows = new ArrayList();
-        allRows.add(createTableTitleHeaderRow());
+        allRows.add(createTableTitleHeaderRow(8));
         allRows.add(createScoresDetailsColumnHeadersRows());
 
         LinkedHashMap<String, String> groupReferenceToNameMap = getGroupReferences();
@@ -99,15 +105,15 @@ public class ResultsActivity extends Activity {
             String groupReference = groupReferencesAsArray[index];
             TableRow tableRow = new TableRow(this);
 
-            TextView indexCell = new TextView(this);
-            TextView variableCell = new TextView(this);
-            TextView numberOfScoresCell = new TextView(this);
-            TextView maxScoreCell = new TextView(this);
+            TextView indexCell = createStyledTextView();
+            TextView variableCell = createStyledTextView();
+            TextView numberOfScoresCell = createStyledTextView();
+            TextView maxScoreCell = createStyledTextView();
 
-            TextView risingCell = new TextView(this);
-            TextView moderateExpansionCell = new TextView(this);
-            TextView advancedExpansionCell = new TextView(this);
-            TextView consolidatedCell = new TextView(this);
+            TextView risingCell = createStyledTextView();
+            TextView moderateExpansionCell = createStyledTextView();
+            TextView advancedExpansionCell = createStyledTextView();
+            TextView consolidatedCell = createStyledTextView();
 
             indexCell.setText(Integer.toString(index + 1));
             variableCell.setText(groupReferenceToNameMap.get(groupReference));
@@ -131,10 +137,6 @@ public class ResultsActivity extends Activity {
 
             }
 
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-            tableRow.setLayoutParams(layoutParams);
-
-
             tableRow.addView(indexCell);
             tableRow.addView(variableCell);
             tableRow.addView(numberOfScoresCell);
@@ -147,12 +149,18 @@ public class ResultsActivity extends Activity {
             allRows.add(tableRow);
         }
 
-
-            TableLayout table = (TableLayout) findViewById(R.id.scores_details_table);
+        TableLayout table = (TableLayout) findViewById(R.id.scores_details_table);
         for (int index = 0; index < allRows.size(); ++index) {
             TableRow tableRow = allRows.get(index);
             table.addView(tableRow, index);
         }
+    }
+
+    private TextView createStyledTextView() {
+        final TextView textView = new TextView(this);
+        textView.setBackgroundResource(R.drawable.table_row);
+
+        return textView;
     }
 
     private void configureCell(TextView risingCell, int percentage, AbstractSummaryCellValues summaryCellValues) {
@@ -163,7 +171,7 @@ public class ResultsActivity extends Activity {
 
     private void fillScoresSummaryTable(ArrayList<GroupColumn> groupColumns) {
         ArrayList<TableRow> allRows = new ArrayList();
-        allRows.add(createTableTitleHeaderRow());
+        allRows.add(createTableTitleHeaderRow(4));
         allRows.add(createTableColumnHeaderRow());
 
         LinkedHashMap<String, String> groupReferenceToNameMap = getGroupReferences();
@@ -176,10 +184,10 @@ public class ResultsActivity extends Activity {
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
             tableRow.setLayoutParams(layoutParams);
 
-            TextView nameCell = new TextView(this);
-            TextView scoreCell = new TextView(this);
-            TextView percentCell = new TextView(this);
-            TextView stageCell = new TextView(this);
+            TextView nameCell = createStyledTextView();
+            TextView scoreCell = createStyledTextView();
+            TextView percentCell = createStyledTextView();
+            TextView stageCell = createStyledTextView();
 
             scoreCell.setGravity(Gravity.CENTER);
             percentCell.setGravity(Gravity.RIGHT);
@@ -220,18 +228,18 @@ public class ResultsActivity extends Activity {
         }
 
         final TableRow totalsRow = createTableRow();
-        TextView totalLabelCell = new TextView(this);
+        TextView totalLabelCell = createStyledTextView();
         totalLabelCell.setTextColor(getResources().getColor(R.color.barchart_color));
         totalLabelCell.setText(getString(R.string.total_row_name));
         totalsRow.addView(totalLabelCell);
 
-        TextView totalScoreCell = new TextView(this);
+        TextView totalScoreCell = createStyledTextView();
         totalScoreCell.setGravity(Gravity.CENTER);
         totalScoreCell.setTextColor(getResources().getColor(R.color.barchart_color));
         totalScoreCell.setText(Integer.toString(totalScore));
         totalsRow.addView(totalScoreCell);
 
-        TextView totalPercentCell = new TextView(this);
+        TextView totalPercentCell = createStyledTextView();
         totalPercentCell.setGravity(Gravity.RIGHT);
         totalPercentCell.setTextColor(getResources().getColor(R.color.barchart_color));
         float percentAsDecimal = totalPercentages / groupColumns.size();
@@ -239,7 +247,7 @@ public class ResultsActivity extends Activity {
         totalPercentCell.setText(formatter.getFormattedValue(percentAsDecimal));
         totalsRow.addView(totalPercentCell);
 
-        TextView totalStageCell = new TextView(this);
+        TextView totalStageCell = createStyledTextView();
         totalStageCell.setGravity(Gravity.CENTER);
         final float calculatedPercentage = percentAsDecimal * 100;
         final int calculatedRoundedPercentage = Math.round(calculatedPercentage);
@@ -269,53 +277,66 @@ public class ResultsActivity extends Activity {
     private TableRow createScoresDetailsColumnHeadersRows() {
         TableRow tableRow = createCenterAlignedTableRow();
 
-        tableRow.addView(addColumnCellHeader(R.string.pound_label));
-        tableRow.addView(addColumnCellHeader(R.string.variables_column_name));
-        tableRow.addView(addColumnCellHeader(R.string.number_of_questions_label));
-        tableRow.addView(addColumnCellHeader(R.string.max_number_of_points));
+        tableRow.addView(createColumnCellHeader(R.string.pound_label));
+        tableRow.addView(createColumnCellHeader(R.string.variables_column_name));
+        tableRow.addView(createColumnCellHeader(R.string.number_of_questions_label));
+        tableRow.addView(createColumnCellHeader(R.string.max_number_of_points));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.rising_label, R.color.rising_color, "Percent \n0-30%"));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.moderate_expansion_label, R.color.moderate_expansion_color, "Percent \n31-55%"));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.advanced_expansion_label, R.color.advanced_expansion_color, "Percent \n56-80%"));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.consolidation_label, R.color.consolidation_color, "Percent \n81-100%"));
 
-        //ADD DATA ROWS
-
-
         return tableRow;
     }
 
-    private TextView addColumnCellHeader(final int labelResourceId) {
-        TextView columnHeaderCell = new TextView(this);
-        columnHeaderCell.setGravity(Gravity.CENTER);
-        columnHeaderCell.setText(getString(labelResourceId));
-        columnHeaderCell.setTypeface(columnHeaderCell.getTypeface(), Typeface.BOLD);
+    private TableLayout createColumnCellHeader(final int labelResourceId) {
 
-        return columnHeaderCell;
+        TableLayout linearLayout = new TableLayout(this);
+        linearLayout.setStretchAllColumns(true);
+
+        TextView textView1 = new TextView(this);
+        textView1.setBackgroundResource(R.drawable.column_header_3_row_span_top_cell);
+        textView1.setGravity(Gravity.CENTER);
+
+        TextView headerDescriptionTextView = new TextView(this);
+        headerDescriptionTextView.setBackgroundResource(R.drawable.column_header_3_row_span_center_cell);
+        headerDescriptionTextView.setGravity(Gravity.CENTER);
+        headerDescriptionTextView.setText(getString(labelResourceId));
+
+        TextView textView2 = new TextView(this);
+        textView2.setBackgroundResource(R.drawable.column_header_3_row_span_bottom_cell);
+        textView2.setGravity(Gravity.CENTER);
+
+        linearLayout.addView(textView1);
+        linearLayout.addView(headerDescriptionTextView);
+        linearLayout.addView(textView2);
+
+        return linearLayout;
     }
 
     private LinearLayout createColumnHeaderCellWithMultiLabels(final int labelResourceId, final int colorResourceId, String percentColumnLabel) {
-        LinearLayout risingColumnContainer = new LinearLayout(this);
-        risingColumnContainer.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout columnHeaderContainer = new LinearLayout(this);
+        columnHeaderContainer.setOrientation(LinearLayout.VERTICAL);
 
-        TextView headerDescriptionTextView = new TextView(this);
+        TextView headerDescriptionTextView = createStyledTextView();
         headerDescriptionTextView.setGravity(Gravity.CENTER);
         headerDescriptionTextView.setText(getString(labelResourceId));
         headerDescriptionTextView.setBackgroundColor(getResources().getColor(colorResourceId));
-        risingColumnContainer.addView(headerDescriptionTextView);
+        columnHeaderContainer.addView(headerDescriptionTextView);
 
-        TextView percentRangeTextView = new TextView(this);
+        TextView percentRangeTextView = createStyledTextView();
         percentRangeTextView.setGravity(Gravity.CENTER);
         percentRangeTextView.setText(percentColumnLabel);
         percentRangeTextView.setTextColor(getResources().getColor(R.color.barchart_color));
-        risingColumnContainer.addView(percentRangeTextView);
+        columnHeaderContainer.addView(percentRangeTextView);
 
-        TextView scoreTextView = new TextView(this);
+        TextView scoreTextView = createStyledTextView();
         scoreTextView.setGravity(Gravity.CENTER);
         scoreTextView.setText(getString(R.string.scores_column_name));
         scoreTextView.setTextColor(getResources().getColor(R.color.barchart_color));
-        risingColumnContainer.addView(scoreTextView);
+        columnHeaderContainer.addView(scoreTextView);
 
-        return risingColumnContainer;
+        return columnHeaderContainer;
     }
 
     private TableRow createTableColumnHeaderRow() {
@@ -328,9 +349,13 @@ public class ResultsActivity extends Activity {
         return tableRow;
     }
 
-    private TableRow createTableTitleHeaderRow() {
+    private TableRow createTableTitleHeaderRow(final int columnSpanToUse) {
         TableRow tableRow = createCenterAlignedTableRow();
-        tableRow.addView(createBoldCenteredTextView(R.string.scores_column_name));
+        final TextView textView = createBoldCenteredTextView(R.string.scores_column_name);
+        TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
+        params.span = columnSpanToUse;
+        textView.setLayoutParams(params);
+        tableRow.addView(textView);
 
         return tableRow;
     }
@@ -343,7 +368,7 @@ public class ResultsActivity extends Activity {
     }
 
     private TextView createBoldCenteredTextView(int labelResourceId) {
-        TextView textView = new TextView(this);
+        TextView textView = createStyledTextView();
         textView.setGravity(Gravity.CENTER);
         textView.setText(getString(labelResourceId));
         textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
@@ -352,10 +377,7 @@ public class ResultsActivity extends Activity {
     }
 
     private TableRow createTableRow() {
-        TableRow tableRow = new TableRow(this);
-        TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-        tableRow.setLayoutParams(layoutParams);
-        return tableRow;
+        return new TableRow(this);
     }
 
     private LinkedHashMap<String, String> getGroupReferences() {
