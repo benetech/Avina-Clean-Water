@@ -147,15 +147,7 @@ public class ResultsActivity extends Activity {
             tableRows.add(tableRow);
         }
 
-        fillDetailsTable(tableRows);
-    }
-
-    private void fillDetailsTable(ArrayList<TableRow> allRows) {
-        TableLayout table = (TableLayout) findViewById(R.id.scores_details_table);
-        for (int index = 0; index < allRows.size(); ++index) {
-            TableRow tableRow = allRows.get(index);
-            table.addView(tableRow, index);
-        }
+        fillTable(tableRows, R.id.scores_details_table);
     }
 
     private TextView createStyledTextView() {
@@ -260,11 +252,11 @@ public class ResultsActivity extends Activity {
 
         allRows.add(totalsRow);
 
-        fillSummaryTable(allRows);
+        fillTable(allRows, R.id.scores_summary_table);
     }
 
-    private void fillSummaryTable(ArrayList<TableRow> allRows) {
-        TableLayout table = (TableLayout) findViewById(R.id.scores_summary_table);
+    private void fillTable(ArrayList<TableRow> allRows, int tableResourceId) {
+        TableLayout table = (TableLayout) findViewById(tableResourceId);
         for (int index = 0; index < allRows.size(); ++index) {
             TableRow tableRow = allRows.get(index);
             table.addView(tableRow, index);
