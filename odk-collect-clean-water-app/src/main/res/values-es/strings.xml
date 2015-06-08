@@ -20,4 +20,13 @@
     <string name="moderate_expansion_percent_bounds_label">(31-55%)</string>
     <string name="advanced_expansion_percent_bounds_label">(56-80%)</string>
     <string name="consolidated_percent_bound_label">(81-100%)</string>
+    <string name="xaxis_label_organization">Organización</string>
+    <string name="xaxis_label_adminstration">Administración</string>
+    <string name="xaxis_label_operation">Operación</string>
+    <string name="xaxis_label_sanitation">Saneamiento</string>
+    <string name="xaxis_label_education">Educación</string>
+    <string name="xaxis_label_water_resources">Recurso Hídrico</string>
+    <string name="xaxis_label_solid_residue">Residuous Sólidos</string>
+    <string name="xaxis_label_communication">Comunicación</string>
+    <string name="xaxis_label_total">Total</string>
 </resources>

@@ -354,15 +354,15 @@ public class ResultsActivity extends Activity {
 
     private String[] getXAxisStaticNames() {
         return new String[] {
-                "Organización",
-                "Administración",
-                "Operación",
-                "Saneamiento",
-                "Educación",
-                "Recurso Hídrico",
-                "Residuous Sólidos",
-                "Comunicación",
-                "Total",
+                getString(R.string.x_axis_label_organization),
+                getString(R.string.x_axis_label_administration),
+                getString(R.string.x_axis_label_operation),
+                getString(R.string.x_axis_label_sanitation),
+                getString(R.string.x_axis_label_education),
+                getString(R.string.x_axis_label_water_resources),
+                getString(R.string.x_axis_label_solid_residue),
+                getString(R.string.x_axis_label_communication),
+                getString(R.string.x_axis_label_total),
         };
     }
 
