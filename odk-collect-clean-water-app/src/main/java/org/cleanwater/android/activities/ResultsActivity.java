@@ -92,9 +92,9 @@ public class ResultsActivity extends Activity {
     }
 
     private void fillScoresDetailsTable(ArrayList<RowData> rowDatas) {
-        ArrayList<TableRow> allRows = new ArrayList();
-        allRows.add(createTableTitleHeaderRow(8));
-        allRows.add(createScoresDetailsColumnHeadersRows());
+        ArrayList<TableRow> tableRows = new ArrayList();
+        tableRows.add(createTableTitleHeaderRow(8));
+        tableRows.add(createScoresDetailsColumnHeadersRows());
 
         ArrayList<RowData> groupReferenceToNameMap = getGroupReferences();
         for (int index = 0; index < groupReferenceToNameMap.size(); ++index) {
@@ -145,10 +145,10 @@ public class ResultsActivity extends Activity {
             tableRow.addView(advancedExpansionCell);
             tableRow.addView(consolidatedCell);
 
-            allRows.add(tableRow);
+            tableRows.add(tableRow);
         }
 
-        fillTable(allRows);
+        fillTable(tableRows);
     }
 
     private void fillTable(ArrayList<TableRow> allRows) {
