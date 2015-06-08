@@ -319,6 +319,9 @@ public class ResultsActivity extends Activity {
             barEntries.add(barEntry);
         }
 
+        if (rowDatas.size() == 0)
+            return new BarData(getXAxisStaticNames(), new ArrayList<BarDataSet>());
+
         totalPercentage = totalPercentage / rowDatas.size();
         BarEntry barEntry = new BarEntry(totalPercentage, 8);
         barEntries.add(barEntry);
