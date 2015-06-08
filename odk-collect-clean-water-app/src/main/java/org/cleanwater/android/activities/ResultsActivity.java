@@ -147,10 +147,10 @@ public class ResultsActivity extends Activity {
             tableRows.add(tableRow);
         }
 
-        fillTable(tableRows);
+        fillDetailsTable(tableRows);
     }
 
-    private void fillTable(ArrayList<TableRow> allRows) {
+    private void fillDetailsTable(ArrayList<TableRow> allRows) {
         TableLayout table = (TableLayout) findViewById(R.id.scores_details_table);
         for (int index = 0; index < allRows.size(); ++index) {
             TableRow tableRow = allRows.get(index);
