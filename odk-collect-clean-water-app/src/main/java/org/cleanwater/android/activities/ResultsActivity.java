@@ -50,7 +50,7 @@ public class ResultsActivity extends Activity {
         ArrayList<RowData> groupReferenceToNameMap = getFormDefParser().getGroupReferences();
         for (int index = 0; index < groupReferenceToNameMap.size(); ++index) {
             RowData groupReference = groupReferenceToNameMap.get(index);
-            TableRow tableRow = new TableRow(this);
+            TableRow tableRow = createTableRow();
 
             TextView indexCell = createStyledTextView();
             TextView variableCell = createStyledTextView();
@@ -126,7 +126,7 @@ public class ResultsActivity extends Activity {
         float totalPercentages = 0;
         int totalScore = 0;
         for (RowData groupReference : groupReferenceToNameMap) {
-            TableRow tableRow = new TableRow(this);
+            TableRow tableRow = createTableRow();
 
             TextView nameCell = createStyledTextView();
             TextView scoreCell = createStyledTextView();
@@ -223,21 +223,16 @@ public class ResultsActivity extends Activity {
     private TableRow createScoresDetailsColumnHeadersRows() {
         TableRow tableRow = createCenterAlignedTableRow();
 
-        tableRow.addView(createColumnCellHeader(R.string.pound_label));
-        tableRow.addView(createColumnCellHeader(R.string.variables_column_name));
-        tableRow.addView(createColumnCellHeader(R.string.number_of_questions_label));
-        tableRow.addView(createColumnCellHeader(R.string.max_number_of_points));
+        tableRow.addView(createBoldCenteredTextView(R.string.pound_label));
+        tableRow.addView(createBoldCenteredTextView(R.string.variables_column_name));
+        tableRow.addView(createBoldCenteredTextView(R.string.number_of_questions_label));
+        tableRow.addView(createBoldCenteredTextView(R.string.max_number_of_points));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.rising_label, R.color.rising_color, "Percent \n0-30%"));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.moderate_expansion_label, R.color.moderate_expansion_color, "Percent \n31-55%"));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.advanced_expansion_label, R.color.advanced_expansion_color, "Percent \n56-80%"));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.consolidation_label, R.color.consolidation_color, "Percent \n81-100%"));
 
         return tableRow;
-    }
-
-    private TextView createColumnCellHeader(final int labelResourceId) {
-
-        return createBoldCenteredTextView(labelResourceId);
     }
 
     private TextView createColumnHeaderCellWithMultiLabels(final int labelResourceId, final int colorResourceId, String percentColumnLabel) {
