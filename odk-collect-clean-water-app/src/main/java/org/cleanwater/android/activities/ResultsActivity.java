@@ -105,7 +105,6 @@ public class ResultsActivity extends Activity {
             TextView variableCell = createStyledTextView();
             TextView numberOfScoresCell = createStyledTextView();
             TextView maxScoreCell = createStyledTextView();
-
             TextView risingCell = createStyledTextView();
             TextView moderateExpansionCell = createStyledTextView();
             TextView advancedExpansionCell = createStyledTextView();
@@ -196,9 +195,9 @@ public class ResultsActivity extends Activity {
             TextView percentCell = createStyledTextView();
             TextView stageCell = createStyledTextView();
 
-            scoreCell.setGravity(Gravity.CENTER);
-            percentCell.setGravity(Gravity.RIGHT);
-            stageCell.setGravity(Gravity.CENTER);
+            setGravityToCenter(scoreCell);
+            setGravityToCenter(percentCell);
+            setGravityToCenter(stageCell);
 
             nameCell.setText(groupReference.getGroupName());
             scoreCell.setText(getString(R.string.non_applicable));
@@ -239,7 +238,7 @@ public class ResultsActivity extends Activity {
         totalsRow.addView(totalLabelCell);
 
         TextView totalScoreCell = createStyledTextView();
-        totalScoreCell.setGravity(Gravity.CENTER);
+        setGravityToCenter(totalScoreCell);
         totalScoreCell.setTextColor(getResources().getColor(R.color.barchart_color));
         totalScoreCell.setText(Integer.toString(totalScore));
         totalsRow.addView(totalScoreCell);
@@ -253,7 +252,7 @@ public class ResultsActivity extends Activity {
         totalsRow.addView(totalPercentCell);
 
         TextView totalStageCell = createStyledTextView();
-        totalStageCell.setGravity(Gravity.CENTER);
+        setGravityToCenter(totalStageCell);
         final float calculatedPercentage = percentAsDecimal * 100;
         final int calculatedRoundedPercentage = Math.round(calculatedPercentage);
         final AbstractSummaryCellValues summaryCellValues = getSummaryCellValues(calculatedRoundedPercentage);
@@ -296,28 +295,36 @@ public class ResultsActivity extends Activity {
 
     private TextView createColumnCellHeader(final int labelResourceId) {
 
-        TextView headerDescriptionTextView = getHeaderTextView();
-        headerDescriptionTextView.setText(getString(labelResourceId));
-
-        return headerDescriptionTextView;
+        return createBoldCenteredTextView(labelResourceId);
     }
 
     private TextView createColumnHeaderCellWithMultiLabels(final int labelResourceId, final int colorResourceId, String percentColumnLabel) {
 
-        TextView headerDescriptionTextView = getHeaderTextView();
-        headerDescriptionTextView.setText(getString(labelResourceId) + "\n" + percentColumnLabel);
+        final String label = getString(labelResourceId) + "\n" + percentColumnLabel;
+        TextView headerDescriptionTextView = createHeaderTextView(label);
         headerDescriptionTextView.setBackgroundColor(getResources().getColor(colorResourceId));
 
         return headerDescriptionTextView;
     }
 
-    private TextView getHeaderTextView() {
-        TextView headerDescriptionTextView = createStyledTextView();
-        headerDescriptionTextView.setTypeface(headerDescriptionTextView.getTypeface(), Typeface.BOLD);
-        headerDescriptionTextView.setGravity(Gravity.CENTER);
-        headerDescriptionTextView.setBackgroundResource(R.drawable.table_row);
+    private TextView createHeaderTextView(String label) {
+        TextView textView = createBoldCenteredTextView(label);
+        textView.setBackgroundResource(R.drawable.table_row);
 
-        return headerDescriptionTextView;
+        return textView;
+    }
+
+    private TextView createBoldCenteredTextView(int labelResourceId) {
+        return createBoldCenteredTextView(getString(labelResourceId));
+    }
+
+    private TextView createBoldCenteredTextView(String label) {
+        TextView textView = createStyledTextView();
+        setGravityToCenter(textView);
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        textView.setText(label);
+
+        return textView;
     }
 
     private TableRow createTableColumnHeaderRow() {
@@ -346,15 +353,6 @@ public class ResultsActivity extends Activity {
         tableRow.setGravity(Gravity.CENTER);
 
         return tableRow;
-    }
-
-    private TextView createBoldCenteredTextView(int labelResourceId) {
-        TextView textView = createStyledTextView();
-        textView.setGravity(Gravity.CENTER);
-        textView.setText(getString(labelResourceId));
-        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-
-        return textView;
     }
 
     private TableRow createTableRow() {
