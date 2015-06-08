@@ -25,16 +25,13 @@ import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryModel;
 import org.javarosa.form.api.FormEntryPrompt;
+
 import org.odk.collect.android.logic.FormController;
 
-import java.security.acl.Group;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by animal@martus.org on 5/26/15.
@@ -133,7 +130,6 @@ public class ResultsActivity extends Activity {
                     else if (summaryCellValues.isConsolidatedCell())
                         configureCell(consolidatedCell, percentage, summaryCellValues);
                 }
-
             }
 
             tableRow.addView(indexCell);
@@ -385,7 +381,6 @@ public class ResultsActivity extends Activity {
                     ++questionCount;
             }
         }
-
 
         return questionCount;
     }
