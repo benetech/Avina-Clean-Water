@@ -64,18 +64,22 @@ public class ResultsActivity extends Activity {
                 if (shouldSkipGroup(groupReference))
                     continue;
 
-                GroupColumn groupColumn = new GroupColumn(groupReference, formEntryCaption.getShortText());
+                GroupColumn groupColumn = createGroupColumn(formEntryController, groupReference, formEntryCaption.getShortText());
                 groupColumns.add(groupColumn);
-                while ((formEntryController.stepToNextEvent()) == FormEntryController.EVENT_QUESTION) {
-                    FormEntryPrompt formEntryPrompt = formEntryController.getModel().getQuestionPrompt();
-                    groupColumn.put(formEntryPrompt.getQuestionText(), formEntryPrompt.getAnswerText());
-                }
-
                 formEntryController.stepToPreviousEvent();
             }
         }
 
         return groupColumns;
+    }
+
+    private GroupColumn createGroupColumn(FormEntryController formEntryController, String groupReference, String label) {
+        GroupColumn groupColumn = new GroupColumn(groupReference, label);
+        while ((formEntryController.stepToNextEvent()) == FormEntryController.EVENT_QUESTION) {
+            FormEntryPrompt formEntryPrompt = formEntryController.getModel().getQuestionPrompt();
+            groupColumn.put(formEntryPrompt.getQuestionText(), formEntryPrompt.getAnswerText());
+        }
+        return groupColumn;
     }
 
     private FormDef getFormDef() {
