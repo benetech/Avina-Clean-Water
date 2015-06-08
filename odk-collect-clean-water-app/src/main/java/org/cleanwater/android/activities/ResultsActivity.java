@@ -43,18 +43,18 @@ public class ResultsActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.results_activity);
-        ArrayList<GroupColumn> groupColumns = createGroupColumnsFromForm();
-        fillScoresDetailsTable(groupColumns);
-        fillScoresSummaryTable(groupColumns);
-        fillBarChart(groupColumns);
+        ArrayList<RowData> rowDatas = createGroupColumnsFromForm();
+        fillScoresDetailsTable(rowDatas);
+        fillScoresSummaryTable(rowDatas);
+        fillBarChart(rowDatas);
     }
 
-    private ArrayList<GroupColumn> createGroupColumnsFromForm() {
+    private ArrayList<RowData> createGroupColumnsFromForm() {
         FormDef formDef = getFormDef();
         FormEntryModel model = new FormEntryModel(formDef);
         FormEntryController formEntryController = new FormEntryController(model);
 
-        ArrayList<GroupColumn> groupColumns = new ArrayList();
+        ArrayList<RowData> rowDatas = new ArrayList();
         int currentEvent;
         while ((currentEvent = formEntryController.stepToNextEvent()) != FormEntryController.EVENT_END_OF_FORM) {
             if (currentEvent == FormEntryController.EVENT_GROUP) {
@@ -64,22 +64,22 @@ public class ResultsActivity extends Activity {
                 if (shouldSkipGroup(groupReference))
                     continue;
 
-                GroupColumn groupColumn = createGroupColumn(formEntryController, groupReference, formEntryCaption.getShortText());
-                groupColumns.add(groupColumn);
+                RowData rowData = createGroupColumn(formEntryController, groupReference, formEntryCaption.getShortText());
+                rowDatas.add(rowData);
                 formEntryController.stepToPreviousEvent();
             }
         }
 
-        return groupColumns;
+        return rowDatas;
     }
 
-    private GroupColumn createGroupColumn(FormEntryController formEntryController, String groupReference, String label) {
-        GroupColumn groupColumn = new GroupColumn(groupReference, label);
+    private RowData createGroupColumn(FormEntryController formEntryController, String groupReference, String label) {
+        RowData rowData = new RowData(groupReference, label);
         while ((formEntryController.stepToNextEvent()) == FormEntryController.EVENT_QUESTION) {
             FormEntryPrompt formEntryPrompt = formEntryController.getModel().getQuestionPrompt();
-            groupColumn.put(formEntryPrompt.getQuestionText(), formEntryPrompt.getAnswerText());
+            rowData.put(formEntryPrompt.getQuestionText(), formEntryPrompt.getAnswerText());
         }
-        return groupColumn;
+        return rowData;
     }
 
     private FormDef getFormDef() {
@@ -91,14 +91,14 @@ public class ResultsActivity extends Activity {
         return getGroupReferencesToSkipAsList().contains(groupReferenceName);
     }
 
-    private void fillScoresDetailsTable(ArrayList<GroupColumn> groupColumns) {
+    private void fillScoresDetailsTable(ArrayList<RowData> rowDatas) {
         ArrayList<TableRow> allRows = new ArrayList();
         allRows.add(createTableTitleHeaderRow(8));
         allRows.add(createScoresDetailsColumnHeadersRows());
 
-        ArrayList<GroupColumn> groupReferenceToNameMap = getGroupReferences();
+        ArrayList<RowData> groupReferenceToNameMap = getGroupReferences();
         for (int index = 0; index < groupReferenceToNameMap.size(); ++index) {
-            GroupColumn groupReference = groupReferenceToNameMap.get(index);
+            RowData groupReference = groupReferenceToNameMap.get(index);
             TableRow tableRow = new TableRow(this);
 
             TextView indexCell = createStyledTextView();
@@ -120,9 +120,9 @@ public class ResultsActivity extends Activity {
             numberOfScoresCell.setText(Integer.toString(groupReference.getTotalQuestionCount()));
             maxScoreCell.setText(Integer.toString(groupReference.getMaxScore()));
 
-            GroupColumn groupColumn = findGroupColumn(groupReference.getGroupReference(), groupColumns);
-            if (groupColumn != null) {
-                int percentage = groupColumn.calculateScore();
+            RowData rowData = findGroupColumn(groupReference.getGroupReference(), rowDatas);
+            if (rowData != null) {
+                int percentage = rowData.calculateScore();
                 AbstractSummaryCellValues summaryCellValues = getSummaryCellValues(percentage);
                 if (summaryCellValues != null) {
                     if (summaryCellValues.isRisingCell())
@@ -173,15 +173,15 @@ public class ResultsActivity extends Activity {
         textView.setText(Integer.toString(percentage));
     }
 
-    private void fillScoresSummaryTable(ArrayList<GroupColumn> groupColumns) {
+    private void fillScoresSummaryTable(ArrayList<RowData> rowDatas) {
         ArrayList<TableRow> allRows = new ArrayList();
         allRows.add(createTableTitleHeaderRow(4));
         allRows.add(createTableColumnHeaderRow());
 
-        ArrayList<GroupColumn> groupReferenceToNameMap = getGroupReferences();
+        ArrayList<RowData> groupReferenceToNameMap = getGroupReferences();
         float totalPercentages = 0;
         int totalScore = 0;
-        for (GroupColumn groupReference : groupReferenceToNameMap) {
+        for (RowData groupReference : groupReferenceToNameMap) {
             TableRow tableRow = new TableRow(this);
 
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
@@ -200,13 +200,13 @@ public class ResultsActivity extends Activity {
             scoreCell.setText(getString(R.string.non_applicable));
             percentCell.setText(getString(R.string.non_applicable));
 
-            GroupColumn groupColumn = findGroupColumn(groupReference.getGroupReference(), groupColumns);
-            if (groupColumn != null) {
-                totalScore += groupColumn.calculateScore();
-                scoreCell.setText(Integer.toString(groupColumn.calculateScore()));
+            RowData rowData = findGroupColumn(groupReference.getGroupReference(), rowDatas);
+            if (rowData != null) {
+                totalScore += rowData.calculateScore();
+                scoreCell.setText(Integer.toString(rowData.calculateScore()));
 
                 IntegerPercentFormatter formatter = new IntegerPercentFormatter();
-                final float calculatedPercentage = groupColumn.calculatePercentageAsDecimal();
+                final float calculatedPercentage = rowData.calculatePercentageAsDecimal();
                 totalPercentages += calculatedPercentage;
                 String formattedPercentValue = formatter.getFormattedValue(calculatedPercentage);
                 percentCell.setText(formattedPercentValue);
@@ -243,7 +243,7 @@ public class ResultsActivity extends Activity {
         TextView totalPercentCell = createStyledTextView();
         totalPercentCell.setGravity(Gravity.RIGHT);
         totalPercentCell.setTextColor(getResources().getColor(R.color.barchart_color));
-        float percentAsDecimal = totalPercentages / groupColumns.size();
+        float percentAsDecimal = totalPercentages / rowDatas.size();
         IntegerPercentFormatter formatter = new IntegerPercentFormatter();
         totalPercentCell.setText(formatter.getFormattedValue(percentAsDecimal));
         totalsRow.addView(totalPercentCell);
@@ -266,10 +266,10 @@ public class ResultsActivity extends Activity {
         }
     }
 
-    private GroupColumn findGroupColumn(String groupReference, ArrayList<GroupColumn> groupColumns) {
-        for (GroupColumn groupColumn : groupColumns) {
-            if (groupReference.equals(groupColumn.getGroupReference()))
-                return groupColumn;
+    private RowData findGroupColumn(String groupReference, ArrayList<RowData> rowDatas) {
+        for (RowData rowData : rowDatas) {
+            if (groupReference.equals(rowData.getGroupReference()))
+                return rowData;
         }
 
         return null;
@@ -357,8 +357,8 @@ public class ResultsActivity extends Activity {
         return new TableRow(this);
     }
 
-    private ArrayList<GroupColumn> getGroupReferences() {
-        ArrayList<GroupColumn> groupColumns = new ArrayList<>();
+    private ArrayList<RowData> getGroupReferences() {
+        ArrayList<RowData> rowDatas = new ArrayList<>();
         FormDef formDef = getFormDef();
         List<IFormElement> children = formDef.getChildren();
         for (IFormElement child : children) {
@@ -366,13 +366,13 @@ public class ResultsActivity extends Activity {
             if (shouldSkipGroup(groupReference))
                 continue;
 
-            GroupColumn groupColumn = new GroupColumn(groupReference, child.getLabelInnerText());
+            RowData rowData = new RowData(groupReference, child.getLabelInnerText());
             int questionCountForGroup = countQuestions(child);
-            groupColumn.setQuestionCount(questionCountForGroup);
-            groupColumns.add(groupColumn);
+            rowData.setQuestionCount(questionCountForGroup);
+            rowDatas.add(rowData);
         }
 
-        return groupColumns;
+        return rowDatas;
     }
 
     private int countQuestions(IFormElement parent) {
@@ -402,28 +402,28 @@ public class ResultsActivity extends Activity {
         return true;
     }
 
-    private void fillBarChart(ArrayList<GroupColumn> groupColumns) {
+    private void fillBarChart(ArrayList<RowData> rowDatas) {
         BarChart chart = (BarChart) findViewById(R.id.results_bar_chart);
         customizeXAxis(chart);
         customizeYAxis(chart);
 
-        BarData lineData = createBarChartData(groupColumns);
+        BarData lineData = createBarChartData(rowDatas);
         chart.setData(lineData);
         chart.invalidate();
     }
 
-    private BarData createBarChartData(ArrayList<GroupColumn> groupColumns) {
+    private BarData createBarChartData(ArrayList<RowData> rowDatas) {
         ArrayList<BarEntry> barEntries = new ArrayList();
         float totalPercentage = 0;
-        for (int index = 0; index < groupColumns.size(); ++index) {
-            GroupColumn groupColumn = groupColumns.get(index);
-            float percentOfQuestionsWithAnswers = groupColumn.calculatePercentageAsDecimal();
+        for (int index = 0; index < rowDatas.size(); ++index) {
+            RowData rowData = rowDatas.get(index);
+            float percentOfQuestionsWithAnswers = rowData.calculatePercentageAsDecimal();
             totalPercentage += percentOfQuestionsWithAnswers;
             BarEntry barEntry = new BarEntry(percentOfQuestionsWithAnswers, index);
             barEntries.add(barEntry);
         }
 
-        totalPercentage = totalPercentage / groupColumns.size();
+        totalPercentage = totalPercentage / rowDatas.size();
         BarEntry barEntry = new BarEntry(totalPercentage, 8);
         barEntries.add(barEntry);
 

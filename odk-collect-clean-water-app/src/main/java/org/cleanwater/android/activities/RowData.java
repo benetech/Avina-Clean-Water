@@ -6,13 +6,13 @@ import java.util.Set;
 /**
  * Created by animal@martus.org on 5/28/15.
  */
-public class GroupColumn {
+public class RowData {
     private String groupReference;
     private String groupName;
     private LinkedHashMap<String, String> questionsToAnswerRowsMap;
     private int questionCount;
 
-    public GroupColumn(String groupReferenceToUse, String groupNameToUse) {
+    public RowData(String groupReferenceToUse, String groupNameToUse) {
         groupReference = groupReferenceToUse;
         groupName = groupNameToUse;
         questionsToAnswerRowsMap = new LinkedHashMap();
