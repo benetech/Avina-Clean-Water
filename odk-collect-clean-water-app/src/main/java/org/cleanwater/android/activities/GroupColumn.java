@@ -10,6 +10,7 @@ public class GroupColumn {
     private String groupReference;
     private String groupName;
     private LinkedHashMap<String, String> questionsToAnswerRowsMap;
+    private int questionCount;
 
     public GroupColumn(String groupReferenceToUse, String groupNameToUse) {
         groupReference = groupReferenceToUse;
@@ -31,7 +32,7 @@ public class GroupColumn {
 
     public float calculatePercentageAsDecimal() {
         float questionsWithAnswersCount = getQuestionsWithAnswersCount();
-        float questionCount = getQuestionCount();
+        float questionCount = getAnsweredQuestionCount();
         if (questionsWithAnswersCount == 0)
             return 0;
 
@@ -61,14 +62,30 @@ public class GroupColumn {
     }
 
     public int calculateScore() {
-        return getQuestionsWithAnswersCount() * 2;
+        return calculateScore(getQuestionsWithAnswersCount());
     }
 
-    public int getQuestionCount() {
+    public int getAnsweredQuestionCount() {
         return questionsToAnswerRowsMap.size();
     }
 
     public int getTotalPossibleScore() {
-        return getQuestionCount() * 2;
+        return calculateScore(getAnsweredQuestionCount());
+    }
+
+    public void setQuestionCount(int questionCount) {
+        this.questionCount = questionCount;
+    }
+
+    public int getTotalQuestionCount() {
+        return questionCount;
+    }
+
+    public int getMaxScore() {
+        return calculateScore(getTotalQuestionCount());
+    }
+
+    public int calculateScore(final int questionCount) {
+        return questionCount * 2;
     }
 }
