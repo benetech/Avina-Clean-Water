@@ -73,7 +73,7 @@ public class ResultsActivity extends Activity {
             RowData rowData = findRowData(groupReference.getGroupReference(), rowDatas);
             if (rowData != null) {
                 int percentage = rowData.calculateScore();
-                AbstractSummaryCellValues summaryCellValues = getSummaryCellValues(percentage);
+                AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(percentage);
                 if (summaryCellValues != null) {
                     if (summaryCellValues.isRisingCell())
                         configureCell(risingCell, percentage, summaryCellValues);
@@ -155,7 +155,7 @@ public class ResultsActivity extends Activity {
                 final float percent = calculatedPercentage * 100;
                 final String calculatedRoundedPercentageAsString = NumberFormat.getIntegerInstance().format(percent);
                 final int calculatedRoundedPercentage = Integer.parseInt(calculatedRoundedPercentageAsString);
-                final AbstractSummaryCellValues summaryCellValues = getSummaryCellValues(calculatedRoundedPercentage);
+                final AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(calculatedRoundedPercentage);
 
                 stageCell.setBackgroundColor(getResources().getColor(summaryCellValues.getColorResourceId()));
                 stageCell.setText(summaryCellValues.getLabelResourceId());
@@ -193,7 +193,7 @@ public class ResultsActivity extends Activity {
         setGravityToCenter(totalStageCell);
         final float calculatedPercentage = percentAsDecimal * 100;
         final int calculatedRoundedPercentage = Math.round(calculatedPercentage);
-        final AbstractSummaryCellValues summaryCellValues = getSummaryCellValues(calculatedRoundedPercentage);
+        final AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(calculatedRoundedPercentage);
         totalStageCell.setBackgroundColor(getResources().getColor(summaryCellValues.getColorResourceId()));
         totalStageCell.setText(summaryCellValues.getLabelResourceId());
         totalsRow.addView(totalStageCell);
@@ -348,22 +348,6 @@ public class ResultsActivity extends Activity {
         xAxis.setSpaceBetweenLabels(1);
         xAxis.setLabelsToSkip(0);
         xAxis.setValues(Arrays.asList(getXAxisStaticNames()));
-    }
-
-    private AbstractSummaryCellValues getSummaryCellValues(int percent) {
-        if (percent >= 0 && percent <= 30)
-            return new SummaryCellRisingValues();
-
-        if (percent >= 31 && percent <= 55)
-            return new SummaryCellModerateExpansionValues();
-
-        if (percent >= 56 && percent <= 80)
-            return new SummaryCellAdvancedExpansionValues();
-
-        if (percent >= 81 && percent <= 100)
-            return new SummaryCellConsolidationValues();
-
-        return null;
     }
 
     private String[] getXAxisStaticNames() {

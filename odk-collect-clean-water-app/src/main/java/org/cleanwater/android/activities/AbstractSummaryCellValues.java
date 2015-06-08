@@ -24,4 +24,20 @@ abstract public class AbstractSummaryCellValues {
     public boolean isConsolidatedCell() {
         return false;
     }
+
+    public static AbstractSummaryCellValues createSummaryCellValues(int percent) {
+        if (percent >= 0 && percent <= 30)
+            return new SummaryCellRisingValues();
+
+        if (percent >= 31 && percent <= 55)
+            return new SummaryCellModerateExpansionValues();
+
+        if (percent >= 56 && percent <= 80)
+            return new SummaryCellAdvancedExpansionValues();
+
+        if (percent >= 81 && percent <= 100)
+            return new SummaryCellConsolidationValues();
+
+        return null;
+    }
 }
