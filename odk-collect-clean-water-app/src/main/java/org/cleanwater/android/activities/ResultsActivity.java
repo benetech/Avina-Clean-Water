@@ -120,7 +120,7 @@ public class ResultsActivity extends Activity {
             numberOfScoresCell.setText(Integer.toString(groupReference.getTotalQuestionCount()));
             maxScoreCell.setText(Integer.toString(groupReference.getMaxScore()));
 
-            RowData rowData = findGroupColumn(groupReference.getGroupReference(), rowDatas);
+            RowData rowData = findRowData(groupReference.getGroupReference(), rowDatas);
             if (rowData != null) {
                 int percentage = rowData.calculateScore();
                 AbstractSummaryCellValues summaryCellValues = getSummaryCellValues(percentage);
@@ -148,6 +148,10 @@ public class ResultsActivity extends Activity {
             allRows.add(tableRow);
         }
 
+        fillTable(allRows);
+    }
+
+    private void fillTable(ArrayList<TableRow> allRows) {
         TableLayout table = (TableLayout) findViewById(R.id.scores_details_table);
         for (int index = 0; index < allRows.size(); ++index) {
             TableRow tableRow = allRows.get(index);
@@ -200,7 +204,7 @@ public class ResultsActivity extends Activity {
             scoreCell.setText(getString(R.string.non_applicable));
             percentCell.setText(getString(R.string.non_applicable));
 
-            RowData rowData = findGroupColumn(groupReference.getGroupReference(), rowDatas);
+            RowData rowData = findRowData(groupReference.getGroupReference(), rowDatas);
             if (rowData != null) {
                 totalScore += rowData.calculateScore();
                 scoreCell.setText(Integer.toString(rowData.calculateScore()));
@@ -266,7 +270,7 @@ public class ResultsActivity extends Activity {
         }
     }
 
-    private RowData findGroupColumn(String groupReference, ArrayList<RowData> rowDatas) {
+    private RowData findRowData(String groupReference, ArrayList<RowData> rowDatas) {
         for (RowData rowData : rowDatas) {
             if (groupReference.equals(rowData.getGroupReference()))
                 return rowData;
