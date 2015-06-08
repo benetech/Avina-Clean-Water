@@ -122,7 +122,7 @@ public class ResultsActivity extends Activity {
 
             GroupColumn groupColumn = findGroupColumn(groupReference.getGroupReference(), groupColumns);
             if (groupColumn != null) {
-                int percentage = groupColumn.calculatePercentageAsRoundedInt();
+                int percentage = groupColumn.calculateScore();
                 AbstractSummaryCellValues summaryCellValues = getSummaryCellValues(percentage);
                 if (summaryCellValues != null) {
                     if (summaryCellValues.isRisingCell())
