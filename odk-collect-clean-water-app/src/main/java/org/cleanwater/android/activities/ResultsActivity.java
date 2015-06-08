@@ -177,9 +177,6 @@ public class ResultsActivity extends Activity {
         for (RowData groupReference : groupReferenceToNameMap) {
             TableRow tableRow = new TableRow(this);
 
-            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-            tableRow.setLayoutParams(layoutParams);
-
             TextView nameCell = createStyledTextView();
             TextView scoreCell = createStyledTextView();
             TextView percentCell = createStyledTextView();
