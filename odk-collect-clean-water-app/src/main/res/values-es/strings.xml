@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Clean Water</string>
+    <string name="action_settings">Settings</string>
+    <string name="scores_column_name">Puntajes</string>
+    <string name="variables_column_name">Variable</string>
+    <string name="score_column_name">Puntaje</string>
+    <string name="percent_column_name">Porcentaje</string>
+    <string name="stage_column_name">ETAPA</string>
+    <string name="total_row_name">Total</string>
+    <string name="non_applicable">n/a</string>
+    <string name="rising_label">NACIENTE</string>
+    <string name="moderate_expansion_label">EXPANSIÓN MODERTADA</string>
+    <string name="advanced_expansion_label">EXPANSIÓN AVANZADA</string>
+    <string name="consolidation_label">CONSOLIDACIÓN </string>
+    <string name="pound_label">#</string>
+    <string name="number_of_questions_label"># de preguntas</string>
+    <string name="max_number_of_points">Puntaje Máximo de acuerdo al numero de preguntas</string>
+    <string name="rising_percent_bounds_label">(0-30%)</string>
+    <string name="moderate_expansion_percent_bounds_label">(31-55%)</string>
+    <string name="advanced_expansion_percent_bounds_label">(56-80%)</string>
+    <string name="consolidated_percent_bound_label">(81-100%)</string>
+</resources>
