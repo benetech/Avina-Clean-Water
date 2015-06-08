@@ -262,6 +262,10 @@ public class ResultsActivity extends Activity {
 
         allRows.add(totalsRow);
 
+        fillSummaryTable(allRows);
+    }
+
+    private void fillSummaryTable(ArrayList<TableRow> allRows) {
         TableLayout table = (TableLayout) findViewById(R.id.scores_summary_table);
         for (int index = 0; index < allRows.size(); ++index) {
             TableRow tableRow = allRows.get(index);
