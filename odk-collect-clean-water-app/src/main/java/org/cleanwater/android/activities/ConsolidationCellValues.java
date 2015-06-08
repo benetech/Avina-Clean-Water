@@ -5,25 +5,25 @@ import org.cleanwater.android.R;
 /**
  * Created by animal@martus.org on 5/29/15.
  */
-public class SummaryCellAdvancedExpansionValues extends AbstractSummaryCellValues {
+public class ConsolidationCellValues extends AbstractSummaryCellValues {
 
     @Override
     public int getPercentRatingLabelId() {
-        return R.string.advanced_expansion_percent_bounds_label;
+        return R.string.consolidated_percent_bound_label;
     }
 
     @Override
     public int getLabelResourceId() {
-        return R.string.advanced_expansion_label;
+        return R.string.consolidation_label;
     }
 
     @Override
     public int getColorResourceId() {
-        return R.color.advanced_expansion_color;
+        return R.color.consolidation_color;
     }
 
     @Override
-    public boolean isAdvancedExpantionCell() {
+    public boolean isConsolidatedCell() {
         return true;
     }
 }

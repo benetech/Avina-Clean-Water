@@ -1,7 +1,5 @@
 package org.cleanwater.android.activities;
 
-import android.graphics.Color;
-
 /**
  * Created by animal@martus.org on 5/29/15.
  */
@@ -28,16 +26,16 @@ abstract public class AbstractSummaryCellValues {
 
     public static AbstractSummaryCellValues createSummaryCellValues(int percent) {
         if (percent >= 0 && percent <= 30)
-            return new SummaryCellRisingValues();
+            return new RisingCellValues();
 
         if (percent >= 31 && percent <= 55)
-            return new SummaryCellModerateExpansionValues();
+            return new ModerateExpansionCellValues();
 
         if (percent >= 56 && percent <= 80)
-            return new SummaryCellAdvancedExpansionValues();
+            return new AdvancedExpansionCellValues();
 
         if (percent >= 81 && percent <= 100)
-            return new SummaryCellConsolidationValues();
+            return new ConsolidationCellValues();
 
         return null;
     }

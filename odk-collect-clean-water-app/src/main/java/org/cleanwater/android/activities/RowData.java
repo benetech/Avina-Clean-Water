@@ -33,18 +33,10 @@ public class RowData {
     public float calculatePercentageAsDecimal() {
         float questionsWithAnswersCount = getQuestionsWithAnswersCount();
         float questionCount = getAnsweredQuestionCount();
-        if (questionsWithAnswersCount == 0)
+        if (questionCount == 0)
             return 0;
 
         return questionsWithAnswersCount / questionCount;
-    }
-
-    public float calculatePercentage() {
-        return calculatePercentageAsDecimal() * 100;
-    }
-
-    public int calculatePercentageAsRoundedInt() {
-        return Math.round(calculatePercentage());
     }
 
     public int getQuestionsWithAnswersCount() {
@@ -67,10 +59,6 @@ public class RowData {
 
     public int getAnsweredQuestionCount() {
         return questionsToAnswerRowsMap.size();
-    }
-
-    public int getTotalPossibleScore() {
-        return calculateScore(getAnsweredQuestionCount());
     }
 
     public void setQuestionCount(int questionCount) {

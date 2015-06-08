@@ -227,10 +227,10 @@ public class ResultsActivity extends Activity {
         tableRow.addView(createBoldCenteredTextView(R.string.variables_column_name));
         tableRow.addView(createBoldCenteredTextView(R.string.number_of_questions_label));
         tableRow.addView(createBoldCenteredTextView(R.string.max_number_of_points));
-        tableRow.addView(createColumnHeaderCellWithMultiLabels(new SummaryCellRisingValues()));
-        tableRow.addView(createColumnHeaderCellWithMultiLabels(new SummaryCellModerateExpansionValues()));
-        tableRow.addView(createColumnHeaderCellWithMultiLabels(new SummaryCellAdvancedExpansionValues()));
-        tableRow.addView(createColumnHeaderCellWithMultiLabels(new SummaryCellConsolidationValues()));
+        tableRow.addView(createColumnHeaderCellWithMultiLabels(new RisingCellValues()));
+        tableRow.addView(createColumnHeaderCellWithMultiLabels(new ModerateExpansionCellValues()));
+        tableRow.addView(createColumnHeaderCellWithMultiLabels(new AdvancedExpansionCellValues()));
+        tableRow.addView(createColumnHeaderCellWithMultiLabels(new ConsolidationCellValues()));
 
         return tableRow;
     }
