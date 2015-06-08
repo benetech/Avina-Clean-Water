@@ -6,6 +6,12 @@ import org.cleanwater.android.R;
  * Created by animal@martus.org on 5/29/15.
  */
 public class SummaryCellConsolidationValues extends AbstractSummaryCellValues {
+
+    @Override
+    public int getPercentRatingLabelId() {
+        return R.string.consolidated_percent_bound_label;
+    }
+
     @Override
     public int getLabelResourceId() {
         return R.string.consolidation_label;

@@ -17,5 +17,9 @@
     <string name="pound_label">#</string>
     <string name="number_of_questions_label"># of questions</string>
     <string name="max_number_of_points">Maximum #of points</string>
+    <string name="rising_percent_bounds_label">(0-30%)</string>
+    <string name="moderate_expansion_percent_bounds_label">(31-55%)</string>
+    <string name="advanced_expansion_percent_bounds_label">(56-80%)</string>
+    <string name="consolidated_percent_bound_label">(81-100%)</string>
 
 </resources>

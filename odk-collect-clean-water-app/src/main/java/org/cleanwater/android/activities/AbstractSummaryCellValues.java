@@ -8,6 +8,7 @@ import android.graphics.Color;
 abstract public class AbstractSummaryCellValues {
     abstract public int getLabelResourceId();
     abstract public int getColorResourceId();
+    abstract public int getPercentRatingLabelId();
 
     public boolean isModerateExpansionCell() {
         return false;

@@ -227,19 +227,21 @@ public class ResultsActivity extends Activity {
         tableRow.addView(createBoldCenteredTextView(R.string.variables_column_name));
         tableRow.addView(createBoldCenteredTextView(R.string.number_of_questions_label));
         tableRow.addView(createBoldCenteredTextView(R.string.max_number_of_points));
-        tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.rising_label, R.color.rising_color, "Percent \n0-30%"));
-        tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.moderate_expansion_label, R.color.moderate_expansion_color, "Percent \n31-55%"));
-        tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.advanced_expansion_label, R.color.advanced_expansion_color, "Percent \n56-80%"));
-        tableRow.addView(createColumnHeaderCellWithMultiLabels(R.string.consolidation_label, R.color.consolidation_color, "Percent \n81-100%"));
+        tableRow.addView(createColumnHeaderCellWithMultiLabels(new SummaryCellRisingValues()));
+        tableRow.addView(createColumnHeaderCellWithMultiLabels(new SummaryCellModerateExpansionValues()));
+        tableRow.addView(createColumnHeaderCellWithMultiLabels(new SummaryCellAdvancedExpansionValues()));
+        tableRow.addView(createColumnHeaderCellWithMultiLabels(new SummaryCellConsolidationValues()));
 
         return tableRow;
     }
 
-    private TextView createColumnHeaderCellWithMultiLabels(final int labelResourceId, final int colorResourceId, String percentColumnLabel) {
+    private TextView createColumnHeaderCellWithMultiLabels(AbstractSummaryCellValues summaryCellValues) {
+        String label = getString(summaryCellValues.getLabelResourceId());
+        label += "\n";
+        label += getString(summaryCellValues.getPercentRatingLabelId());
 
-        final String label = getString(labelResourceId) + "\n" + percentColumnLabel;
         TextView headerDescriptionTextView = createHeaderTextView(label);
-        headerDescriptionTextView.setBackgroundColor(getResources().getColor(colorResourceId));
+        headerDescriptionTextView.setBackgroundColor(getResources().getColor(summaryCellValues.getColorResourceId()));
 
         return headerDescriptionTextView;
     }
