@@ -154,8 +154,6 @@ public class ResultsActivity extends Activity {
         TableLayout table = (TableLayout) findViewById(R.id.scores_details_table);
         for (int index = 0; index < allRows.size(); ++index) {
             TableRow tableRow = allRows.get(index);
-            final TableLayout.LayoutParams params = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-            tableRow.setLayoutParams(params);
             table.addView(tableRow, index);
         }
     }
