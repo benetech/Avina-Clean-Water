@@ -36,13 +36,13 @@ public class ResultsActivity extends Activity {
         setContentView(R.layout.results_activity);
 
         formDefParser = new FormDefParser();
-        ArrayList<RowData> rowDatas = getFormDefParser().createRowDataListFromGroupDefs();
-        fillScoresDetailsTable(rowDatas);
-        fillScoresSummaryTable(rowDatas);
-        fillBarChart(rowDatas);
+        ArrayList<RowData> rowDataList = getFormDefParser().createRowDataListFromGroupDefs();
+        fillScoresDetailsTable(rowDataList);
+        fillScoresSummaryTable(rowDataList);
+        fillBarChart(rowDataList);
     }
 
-    private void fillScoresDetailsTable(ArrayList<RowData> rowDatas) {
+    private void fillScoresDetailsTable(ArrayList<RowData> rowDataList) {
         ArrayList<TableRow> tableRows = new ArrayList();
         tableRows.add(createTableTitleHeaderRow(8));
         tableRows.add(createScoresDetailsColumnHeadersRows());
@@ -70,7 +70,7 @@ public class ResultsActivity extends Activity {
             numberOfScoresCell.setText(Integer.toString(groupReference.getTotalQuestionCount()));
             maxScoreCell.setText(Integer.toString(groupReference.getMaxScore()));
 
-            RowData rowData = findRowData(groupReference.getGroupReference(), rowDatas);
+            RowData rowData = findRowData(groupReference.getGroupReference(), rowDataList);
 
             if (rowData != null) {
                 final int totalQuestionCount = groupReference.getTotalQuestionCount();
@@ -122,7 +122,7 @@ public class ResultsActivity extends Activity {
         textView.setText(Integer.toString(percentage));
     }
 
-    private void fillScoresSummaryTable(ArrayList<RowData> rowDatas) {
+    private void fillScoresSummaryTable(ArrayList<RowData> rowDataList) {
         ArrayList<TableRow> allRows = new ArrayList();
         allRows.add(createTableTitleHeaderRow(4));
         allRows.add(createTableColumnHeaderRow());
@@ -146,7 +146,7 @@ public class ResultsActivity extends Activity {
             scoreCell.setText(getString(R.string.non_applicable));
             percentCell.setText(getString(R.string.non_applicable));
 
-            RowData rowData = findRowData(groupReference.getGroupReference(), rowDatas);
+            RowData rowData = findRowData(groupReference.getGroupReference(), rowDataList);
             if (rowData != null) {
                 totalScore += rowData.calculateScore();
                 scoreCell.setText(Integer.toString(rowData.calculateScore()));
@@ -189,7 +189,7 @@ public class ResultsActivity extends Activity {
         TextView totalPercentCell = createStyledTextView();
         totalPercentCell.setGravity(Gravity.RIGHT);
         totalPercentCell.setTextColor(getResources().getColor(R.color.barchart_color));
-        float percentAsDecimal = totalPercentages / rowDatas.size();
+        float percentAsDecimal = totalPercentages / rowDataList.size();
         IntegerPercentFormatter formatter = new IntegerPercentFormatter();
         totalPercentCell.setText(formatter.getFormattedValue(percentAsDecimal));
         totalsRow.addView(totalPercentCell);
@@ -216,8 +216,8 @@ public class ResultsActivity extends Activity {
         }
     }
 
-    private RowData findRowData(String groupReference, ArrayList<RowData> rowDatas) {
-        for (RowData rowData : rowDatas) {
+    private RowData findRowData(String groupReference, ArrayList<RowData> rowDataList) {
+        for (RowData rowData : rowDataList) {
             if (groupReference.equals(rowData.getGroupReference()))
                 return rowData;
         }
@@ -303,31 +303,31 @@ public class ResultsActivity extends Activity {
         return new TableRow(this);
     }
 
-    private void fillBarChart(ArrayList<RowData> rowDatas) {
+    private void fillBarChart(ArrayList<RowData> rowDataList) {
         BarChart chart = (BarChart) findViewById(R.id.results_bar_chart);
         customizeXAxis(chart);
         customizeYAxis(chart);
 
-        BarData lineData = createBarChartData(rowDatas);
+        BarData lineData = createBarChartData(rowDataList);
         chart.setData(lineData);
         chart.invalidate();
     }
 
-    private BarData createBarChartData(ArrayList<RowData> rowDatas) {
+    private BarData createBarChartData(ArrayList<RowData> rowDataList) {
         ArrayList<BarEntry> barEntries = new ArrayList();
         float totalPercentage = 0;
-        for (int index = 0; index < rowDatas.size(); ++index) {
-            RowData rowData = rowDatas.get(index);
+        for (int index = 0; index < rowDataList.size(); ++index) {
+            RowData rowData = rowDataList.get(index);
             float percentOfQuestionsWithAnswers = rowData.calculatePercentageAsDecimal();
             totalPercentage += percentOfQuestionsWithAnswers;
             BarEntry barEntry = new BarEntry(percentOfQuestionsWithAnswers, index);
             barEntries.add(barEntry);
         }
 
-        if (rowDatas.size() == 0)
+        if (rowDataList.size() == 0)
             return new BarData(getXAxisStaticNames(), new ArrayList<BarDataSet>());
 
-        totalPercentage = totalPercentage / rowDatas.size();
+        totalPercentage = totalPercentage / rowDataList.size();
         BarEntry barEntry = new BarEntry(totalPercentage, 8);
         barEntries.add(barEntry);
 
