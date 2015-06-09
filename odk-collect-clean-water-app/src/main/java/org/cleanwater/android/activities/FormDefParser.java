@@ -24,7 +24,7 @@ public class FormDefParser {
         FormEntryModel model = new FormEntryModel(formDef);
         FormEntryController formEntryController = new FormEntryController(model);
 
-        ArrayList<RowData> rowDatas = new ArrayList();
+        ArrayList<RowData> rowDataList = new ArrayList();
         int currentEvent;
         while ((currentEvent = formEntryController.stepToNextEvent()) != FormEntryController.EVENT_END_OF_FORM) {
             if (currentEvent == FormEntryController.EVENT_GROUP) {
@@ -35,16 +35,16 @@ public class FormDefParser {
                     continue;
 
                 RowData rowData = createGroupColumn(formEntryController, groupReference, formEntryCaption.getShortText());
-                rowDatas.add(rowData);
+                rowDataList.add(rowData);
                 formEntryController.stepToPreviousEvent();
             }
         }
 
-        return rowDatas;
+        return rowDataList;
     }
 
     public ArrayList<RowData> getGroupReferences() {
-        ArrayList<RowData> rowDatas = new ArrayList<>();
+        ArrayList<RowData> rowDataList = new ArrayList<>();
         FormDef formDef = getFormDef();
         List<IFormElement> children = formDef.getChildren();
         for (IFormElement child : children) {
@@ -55,10 +55,10 @@ public class FormDefParser {
             RowData rowData = new RowData(groupReference, child.getLabelInnerText());
             int questionCountForGroup = countQuestions(child);
             rowData.setQuestionCount(questionCountForGroup);
-            rowDatas.add(rowData);
+            rowDataList.add(rowData);
         }
 
-        return rowDatas;
+        return rowDataList;
     }
 
     private RowData createGroupColumn(FormEntryController formEntryController, String groupReference, String label) {
