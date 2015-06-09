@@ -36,7 +36,7 @@ public class ResultsActivity extends Activity {
         setContentView(R.layout.results_activity);
 
         formDefParser = new FormDefParser();
-        ArrayList<RowData> rowDatas = getFormDefParser().createGroupColumnsFromForm();
+        ArrayList<RowData> rowDatas = getFormDefParser().createRowDataListFromGroupDefs();
         fillScoresDetailsTable(rowDatas);
         fillScoresSummaryTable(rowDatas);
         fillBarChart(rowDatas);

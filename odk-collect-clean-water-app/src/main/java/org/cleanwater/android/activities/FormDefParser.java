@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class FormDefParser {
 
-    public ArrayList<RowData> createGroupColumnsFromForm() {
+    public ArrayList<RowData> createRowDataListFromGroupDefs() {
         FormDef formDef = getFormDef();
         FormEntryModel model = new FormEntryModel(formDef);
         FormEntryController formEntryController = new FormEntryController(model);
