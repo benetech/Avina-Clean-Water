@@ -71,18 +71,23 @@ public class ResultsActivity extends Activity {
             maxScoreCell.setText(Integer.toString(groupReference.getMaxScore()));
 
             RowData rowData = findRowData(groupReference.getGroupReference(), rowDatas);
+
             if (rowData != null) {
-                int percentage = rowData.calculateScore();
+                final int totalQuestionCount = groupReference.getTotalQuestionCount();
+                System.out.println(totalQuestionCount);
+                rowData.setQuestionCount(totalQuestionCount);
+                int percentage = rowData.calculatePercentageAsRoundedInt();
                 AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(percentage);
+                int score = rowData.calculateScore();
                 if (summaryCellValues != null) {
                     if (summaryCellValues.isRisingCell())
-                        configureCell(risingCell, percentage, summaryCellValues);
+                        configureCell(risingCell, score, summaryCellValues);
                     else if (summaryCellValues.isModerateExpansionCell())
-                        configureCell(moderateExpansionCell, percentage, summaryCellValues);
+                        configureCell(moderateExpansionCell, score, summaryCellValues);
                     else if (summaryCellValues.isAdvancedExpantionCell())
-                        configureCell(advancedExpansionCell, percentage, summaryCellValues);
+                        configureCell(advancedExpansionCell, score, summaryCellValues);
                     else if (summaryCellValues.isConsolidatedCell())
-                        configureCell(consolidatedCell, percentage, summaryCellValues);
+                        configureCell(consolidatedCell, score, summaryCellValues);
                 }
             }
 

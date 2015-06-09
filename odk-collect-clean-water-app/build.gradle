@@ -1,8 +1,9 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
+
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "21.1.2"
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         minSdkVersion 19
@@ -25,6 +26,7 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
     }
+    sourceSets { main { java.srcDirs = ['src/main/java', 'src/test/java/'] } }
 }
 
 dependencies {
@@ -32,4 +34,10 @@ dependencies {
 
     compile project(':odk-collect')
     compile files('libs/mpandroidchartlibrary-2-1-0.jar')
+
+    testCompile 'junit:junit:4.12'
+    testCompile('org.robolectric:robolectric:3.0-rc2') {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
 }

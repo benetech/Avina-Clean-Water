@@ -65,7 +65,8 @@ public class FormDefParser {
         RowData rowData = new RowData(groupReference, label);
         while ((formEntryController.stepToNextEvent()) == FormEntryController.EVENT_QUESTION) {
             FormEntryPrompt formEntryPrompt = formEntryController.getModel().getQuestionPrompt();
-            rowData.put(formEntryPrompt.getQuestionText(), formEntryPrompt.getAnswerText());
+            if (shouldIncludeQuestionType(formEntryPrompt.getControlType()))
+                rowData.put(formEntryPrompt.getQuestionText(), formEntryPrompt.getAnswerText());
         }
         return rowData;
     }
@@ -103,7 +104,17 @@ public class FormDefParser {
         if (question.getControlType() == Constants.DATATYPE_TEXT)
             return false;
 
-        return true;
+        return shouldIncludeQuestionType(question.getControlType());
+    }
+
+    private boolean shouldIncludeQuestionType(int controlType) {
+        if (controlType == Constants.CONTROL_SELECT_ONE)
+            return true;
+
+        if (controlType == Constants.CONTROL_SELECT_MULTI)
+            return true;
+
+        return false;
     }
 
     private ArrayList<String> getGroupReferencesToSkipAsList() {

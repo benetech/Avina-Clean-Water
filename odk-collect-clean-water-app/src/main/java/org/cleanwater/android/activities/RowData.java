@@ -53,11 +53,19 @@ public class RowData {
         return questionsWithAnswersCount;
     }
 
+    private float calculatePercentage() {
+        return calculatePercentageAsDecimal() * 100;
+    }
+
+    public int calculatePercentageAsRoundedInt() {
+        return Math.round(calculatePercentage());
+    }
+
     public int calculateScore() {
         return calculateScore(getQuestionsWithAnswersCount());
     }
 
-    public int getAnsweredQuestionCount() {
+    private int getAnsweredQuestionCount() {
         return questionsToAnswerRowsMap.size();
     }
 
@@ -73,7 +81,7 @@ public class RowData {
         return calculateScore(getTotalQuestionCount());
     }
 
-    public int calculateScore(final int questionCount) {
+    private int calculateScore(final int questionCount) {
         return questionCount * 2;
     }
 }
