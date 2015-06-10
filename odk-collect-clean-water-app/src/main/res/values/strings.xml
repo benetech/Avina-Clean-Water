@@ -29,4 +29,5 @@
     <string name="x_axis_label_solid_residue">Solid Residue</string>
     <string name="x_axis_label_communication">Communication</string>
     <string name="x_axis_label_total">Total</string>
+    <string name="bar_chart_title">Diagnostics</string>
 </resources>

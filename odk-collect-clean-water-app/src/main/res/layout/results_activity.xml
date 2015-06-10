@@ -47,10 +47,17 @@
             style="?android:attr/listSeparatorTextViewStyle"
             android:paddingTop="50dip"
             android:gravity="center_horizontal"
-            android:layout_below="@+id/connect_help"
+            android:layout_below="@+id/scores_summary_table"
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:background="@color/separator" />
+
+        <TextView
+            android:id="@+id/chartTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/results_bar_chart"
