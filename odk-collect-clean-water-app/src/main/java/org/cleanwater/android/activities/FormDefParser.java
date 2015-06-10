@@ -2,6 +2,7 @@ package org.cleanwater.android.activities;
 
 import org.javarosa.core.model.Constants;
 import org.javarosa.core.model.FormDef;
+import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.IFormElement;
 import org.javarosa.core.model.QuestionDef;
 import org.javarosa.form.api.FormEntryCaption;
@@ -12,6 +13,7 @@ import org.odk.collect.android.logic.FormController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -19,33 +21,10 @@ import java.util.List;
  */
 public class FormDefParser {
 
-    public ArrayList<RowData> createRowDataListFromGroupDefs() {
-        FormDef formDef = getFormDef();
-        FormEntryModel model = new FormEntryModel(formDef);
-        FormEntryController formEntryController = new FormEntryController(model);
-
-        ArrayList<RowData> rowDataList = new ArrayList();
-        int currentEvent;
-        while ((currentEvent = formEntryController.stepToNextEvent()) != FormEntryController.EVENT_END_OF_FORM) {
-            if (currentEvent == FormEntryController.EVENT_GROUP) {
-
-                FormEntryCaption formEntryCaption = formEntryController.getModel().getCaptionPrompt();
-                String groupReference = formEntryCaption.getFormElement().getBind().getReference().toString();
-                if (shouldSkipGroup(groupReference))
-                    continue;
-
-                RowData rowData = createGroupColumn(formEntryController, groupReference, formEntryCaption.getShortText());
-                rowDataList.add(rowData);
-                formEntryController.stepToPreviousEvent();
-            }
-        }
-
-        return rowDataList;
-    }
-
     public ArrayList<RowData> getGroupReferences() {
         ArrayList<RowData> rowDataList = new ArrayList<>();
         FormDef formDef = getFormDef();
+
         List<IFormElement> children = formDef.getChildren();
         for (IFormElement child : children) {
             String groupReference = child.getBind().getReference().toString();
@@ -58,7 +37,36 @@ public class FormDefParser {
             rowDataList.add(rowData);
         }
 
+        FormEntryModel model = new FormEntryModel(formDef);
+        FormEntryController formEntryController = new FormEntryController(model);
+        for (RowData rowDat : rowDataList) {
+            FormEntryCaption formEntryCaption = findFormEntryCaption(formEntryController, rowDat.getGroupReference());
+
+            if (formEntryCaption == null)
+                continue;
+
+            RowData rowDataWithQuestionsAndAnswers = createGroupColumn(formEntryController, rowDat.getGroupReference(), formEntryCaption.getShortText());
+            LinkedHashMap questionsToAnswersMap = rowDataWithQuestionsAndAnswers.getQuestionsToAnswerRowsMap();
+            rowDat.putAll(questionsToAnswersMap);
+        }
+
         return rowDataList;
+    }
+
+    private FormEntryCaption findFormEntryCaption(FormEntryController formEntryController, String referencesToMatch) {
+        int currentEvent;
+        formEntryController.jumpToIndex(FormIndex.createBeginningOfFormIndex());
+        while ((currentEvent = formEntryController.stepToNextEvent()) != FormEntryController.EVENT_END_OF_FORM) {
+            if (currentEvent == FormEntryController.EVENT_GROUP) {
+                FormEntryCaption formEntryCaption = formEntryController.getModel().getCaptionPrompt();
+                String groupReference = formEntryCaption.getFormElement().getBind().getReference().toString();
+                if (referencesToMatch.equals(groupReference))
+                    return formEntryCaption;
+
+            }
+        }
+
+        return null;
     }
 
     private RowData createGroupColumn(FormEntryController formEntryController, String groupReference, String label) {

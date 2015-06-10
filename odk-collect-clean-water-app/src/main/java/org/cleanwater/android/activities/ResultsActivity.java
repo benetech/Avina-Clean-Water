@@ -2,7 +2,9 @@ package org.cleanwater.android.activities;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.TableLayout;
@@ -19,8 +21,10 @@ import com.github.mikephil.charting.data.BarEntry;
 import org.cleanwater.android.R;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 /**
  * Created by animal@martus.org on 5/26/15.
@@ -36,20 +40,19 @@ public class ResultsActivity extends Activity {
         setContentView(R.layout.results_activity);
 
         formDefParser = new FormDefParser();
-        ArrayList<RowData> rowDataList = getFormDefParser().createRowDataListFromGroupDefs();
-        fillScoresDetailsTable(rowDataList);
-        fillScoresSummaryTable(rowDataList);
-        fillBarChart(rowDataList);
+        fillScoresDetailsTable();
+        fillScoresSummaryTable();
+        fillBarChart();
     }
 
-    private void fillScoresDetailsTable(ArrayList<RowData> rowDataList) {
+    private void fillScoresDetailsTable() {
+        ArrayList<RowData> rowDataList = getFormDefParser().getGroupReferences();
         ArrayList<TableRow> tableRows = new ArrayList();
         tableRows.add(createTableTitleHeaderRow(8));
         tableRows.add(createScoresDetailsColumnHeadersRows());
 
-        ArrayList<RowData> groupReferenceToNameMap = getFormDefParser().getGroupReferences();
-        for (int index = 0; index < groupReferenceToNameMap.size(); ++index) {
-            RowData groupReference = groupReferenceToNameMap.get(index);
+        for (int index = 0; index < rowDataList.size(); ++index) {
+            RowData groupReference = rowDataList.get(index);
             TableRow tableRow = createTableRow();
 
             TextView indexCell = createStyledTextView();
@@ -70,15 +73,10 @@ public class ResultsActivity extends Activity {
             numberOfScoresCell.setText(Integer.toString(groupReference.getTotalQuestionCount()));
             maxScoreCell.setText(Integer.toString(groupReference.getMaxScore()));
 
-            RowData rowData = findRowData(groupReference.getGroupReference(), rowDataList);
-
-            if (rowData != null) {
-                final int totalQuestionCount = groupReference.getTotalQuestionCount();
-                System.out.println(totalQuestionCount);
-                rowData.setQuestionCount(totalQuestionCount);
-                int percentage = rowData.calculatePercentageAsRoundedInt();
+            if (groupReference.hasQuestions()) {
+                int percentage = groupReference.calculatePercentageAsRoundedInt();
                 AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(percentage);
-                int score = rowData.calculateScore();
+                int score = groupReference.calculateScore();
                 if (summaryCellValues != null) {
                     if (summaryCellValues.isRisingCell())
                         configureCell(risingCell, score, summaryCellValues);
@@ -117,20 +115,28 @@ public class ResultsActivity extends Activity {
     }
 
     private void configureCell(TextView textView, int percentage, AbstractSummaryCellValues summaryCellValues) {
-        textView.setBackgroundColor(getResources().getColor(summaryCellValues.getColorResourceId()));
+        setBackgroundToColorWithoutLoosingBorder(textView, summaryCellValues);
         setGravityToCenter(textView);
         textView.setText(Integer.toString(percentage));
     }
 
-    private void fillScoresSummaryTable(ArrayList<RowData> rowDataList) {
+    private void setBackgroundToColorWithoutLoosingBorder(TextView textView, AbstractSummaryCellValues summaryCellValues) {
+        int colorResourceId = summaryCellValues.getColorResourceId();
+        final int backgroundColor = getResources().getColor(colorResourceId);
+        Drawable drawable = getResources().getDrawable(R.drawable.table_row);
+        drawable.setColorFilter(backgroundColor, PorterDuff.Mode.MULTIPLY);
+        textView.setBackground(drawable);
+    }
+
+    private void fillScoresSummaryTable() {
+        ArrayList<RowData> rowDataList = getFormDefParser().getGroupReferences();
         ArrayList<TableRow> allRows = new ArrayList();
         allRows.add(createTableTitleHeaderRow(4));
         allRows.add(createTableColumnHeaderRow());
 
-        ArrayList<RowData> groupReferenceToNameMap = getFormDefParser().getGroupReferences();
         float totalPercentages = 0;
         int totalScore = 0;
-        for (RowData groupReference : groupReferenceToNameMap) {
+        for (RowData groupReference : rowDataList) {
             TableRow tableRow = createTableRow();
 
             TextView nameCell = createStyledTextView();
@@ -146,13 +152,12 @@ public class ResultsActivity extends Activity {
             scoreCell.setText(getString(R.string.non_applicable));
             percentCell.setText(getString(R.string.non_applicable));
 
-            RowData rowData = findRowData(groupReference.getGroupReference(), rowDataList);
-            if (rowData != null) {
-                totalScore += rowData.calculateScore();
-                scoreCell.setText(Integer.toString(rowData.calculateScore()));
+            if (groupReference.hasQuestions()) {
+                totalScore += groupReference.calculateScore();
+                scoreCell.setText(Integer.toString(groupReference.calculateScore()));
 
                 IntegerPercentFormatter formatter = new IntegerPercentFormatter();
-                final float calculatedPercentage = rowData.calculatePercentageAsDecimal();
+                final float calculatedPercentage = groupReference.calculatePercentageAsDecimal();
                 totalPercentages += calculatedPercentage;
                 String formattedPercentValue = formatter.getFormattedValue(calculatedPercentage);
                 percentCell.setText(formattedPercentValue);
@@ -162,7 +167,7 @@ public class ResultsActivity extends Activity {
                 final int calculatedRoundedPercentage = Integer.parseInt(calculatedRoundedPercentageAsString);
                 final AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(calculatedRoundedPercentage);
 
-                stageCell.setBackgroundColor(getResources().getColor(summaryCellValues.getColorResourceId()));
+                setBackgroundToColorWithoutLoosingBorder(stageCell, summaryCellValues);
                 stageCell.setText(summaryCellValues.getLabelResourceId());
             }
 
@@ -199,7 +204,7 @@ public class ResultsActivity extends Activity {
         final float calculatedPercentage = percentAsDecimal * 100;
         final int calculatedRoundedPercentage = Math.round(calculatedPercentage);
         final AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(calculatedRoundedPercentage);
-        totalStageCell.setBackgroundColor(getResources().getColor(summaryCellValues.getColorResourceId()));
+        setBackgroundToColorWithoutLoosingBorder(totalStageCell, summaryCellValues);
         totalStageCell.setText(summaryCellValues.getLabelResourceId());
         totalsRow.addView(totalStageCell);
 
@@ -246,7 +251,7 @@ public class ResultsActivity extends Activity {
         label += getString(summaryCellValues.getPercentRatingLabelId());
 
         TextView headerDescriptionTextView = createHeaderTextView(label);
-        headerDescriptionTextView.setBackgroundColor(getResources().getColor(summaryCellValues.getColorResourceId()));
+        setBackgroundToColorWithoutLoosingBorder(headerDescriptionTextView, summaryCellValues);
 
         return headerDescriptionTextView;
     }
@@ -265,10 +270,14 @@ public class ResultsActivity extends Activity {
     private TextView createBoldCenteredTextView(String label) {
         TextView textView = createStyledTextView();
         setGravityToCenter(textView);
-        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
+        setToBold(textView);
         textView.setText(label);
 
         return textView;
+    }
+
+    private void setToBold(TextView textView) {
+        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
     }
 
     private TableRow createTableColumnHeaderRow() {
@@ -303,14 +312,26 @@ public class ResultsActivity extends Activity {
         return new TableRow(this);
     }
 
-    private void fillBarChart(ArrayList<RowData> rowDataList) {
-        BarChart chart = (BarChart) findViewById(R.id.results_bar_chart);
-        customizeXAxis(chart);
-        customizeYAxis(chart);
+    private void fillBarChart() {
+        TextView chartTitleTextView = (TextView) findViewById(R.id.chartTitle);
+        setToBold(chartTitleTextView);
+        setGravityToCenter(chartTitleTextView);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM dd, yyyy");
+        String chartTitle = getString(R.string.bar_chart_title);
+        chartTitle += "\n";
+        chartTitle += simpleDateFormat.format(Calendar.getInstance().getTime());
+        chartTitleTextView.setText(chartTitle);
+
+        ArrayList<RowData> rowDataList = getFormDefParser().getGroupReferences();
+        BarChart barChart = (BarChart) findViewById(R.id.results_bar_chart);
+        barChart.getLegend().setEnabled(false);
+
+        customizeXAxis(barChart);
+        customizeYAxis(barChart);
 
         BarData lineData = createBarChartData(rowDataList);
-        chart.setData(lineData);
-        chart.invalidate();
+        barChart.setData(lineData);
+        barChart.invalidate();
     }
 
     private BarData createBarChartData(ArrayList<RowData> rowDataList) {
@@ -328,7 +349,7 @@ public class ResultsActivity extends Activity {
             return new BarData(getXAxisStaticNames(), new ArrayList<BarDataSet>());
 
         totalPercentage = totalPercentage / rowDataList.size();
-        BarEntry barEntry = new BarEntry(totalPercentage, 8);
+        BarEntry barEntry = new BarEntry(totalPercentage, rowDataList.size());
         barEntries.add(barEntry);
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
@@ -347,6 +368,7 @@ public class ResultsActivity extends Activity {
         yAxis.setTextSize(10f);
         yAxis.setAxisMaxValue(1.0f);
         yAxis.setTextColor(Color.BLACK);
+        yAxis.setDrawGridLines(false);
     }
 
     private void customizeXAxis(BarChart chart) {

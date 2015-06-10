@@ -84,4 +84,16 @@ public class RowData {
     private int calculateScore(final int questionCount) {
         return questionCount * 2;
     }
+
+    public LinkedHashMap<String, String> getQuestionsToAnswerRowsMap() {
+        return questionsToAnswerRowsMap;
+    }
+
+    public void putAll(LinkedHashMap questionsToAnswersMap) {
+        getQuestionsToAnswerRowsMap().putAll(questionsToAnswersMap);
+    }
+
+    public boolean hasQuestions() {
+        return getQuestionsToAnswerRowsMap().size() > 0;
+    }
 }
