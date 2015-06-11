@@ -361,8 +361,12 @@ public class ResultsActivity extends Activity {
     private BarData createBarChartData(ArrayList<RowData> rowDataList) {
         ArrayList<BarEntry> barEntries = new ArrayList();
         float totalPercentage = 0;
+        int questionsWithAnswers = 0;
         for (int index = 0; index < rowDataList.size(); ++index) {
             RowData rowData = rowDataList.get(index);
+            if (rowData.hasQuestionsWithAnswers())
+                ++questionsWithAnswers;
+
             float percentOfQuestionsWithAnswers = rowData.calculatePercentageAsDecimal();
             totalPercentage += percentOfQuestionsWithAnswers;
             BarEntry barEntry = new BarEntry(percentOfQuestionsWithAnswers, index);
@@ -372,7 +376,7 @@ public class ResultsActivity extends Activity {
         if (rowDataList.size() == 0)
             return new BarData(getXAxisStaticNames(), new ArrayList<BarDataSet>());
 
-        totalPercentage = totalPercentage / rowDataList.size();
+        totalPercentage = totalPercentage / questionsWithAnswers;
         BarEntry barEntry = new BarEntry(totalPercentage, rowDataList.size());
         barEntries.add(barEntry);
 
