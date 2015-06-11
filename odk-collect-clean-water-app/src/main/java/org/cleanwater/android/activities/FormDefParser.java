@@ -90,6 +90,9 @@ public class FormDefParser {
 
     private int countQuestions(IFormElement parent) {
         final List<IFormElement> children = parent.getChildren();
+        if (children == null)
+            return 0;
+
         int questionCount = 0;
         for (IFormElement child : children) {
             if (child instanceof QuestionDef) {
@@ -131,9 +134,10 @@ public class FormDefParser {
 
     private String[] getGroupReferencesToSkip() {
         return new String[] {
-                "/AVINA_proto_1/personalization_group",
-                "/AVINA_proto_1/personalization_note",
-                "/AVINA_proto_1/which_groups",
+                "/AVINA_Pedro/personalization_group",
+                "/AVINA_Pedro/personalization_note",
+                "/AVINA_Pedro/which_groups",
+                "/AVINA_Pedro/photos_group",
         };
     }
 }
