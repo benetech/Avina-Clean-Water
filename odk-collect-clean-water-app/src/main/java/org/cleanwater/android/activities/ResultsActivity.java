@@ -55,7 +55,7 @@ public class ResultsActivity extends Activity {
             RowData groupReference = rowDataList.get(index);
             TableRow tableRow = createTableRow();
 
-            TextView indexCell = createStyledTextView();
+            TextView indexCell = createStyledTextView(0.25f);
             TextView variableCell = createStyledTextView();
             TextView numberOfScoresCell = createStyledTextView();
             TextView maxScoreCell = createStyledTextView();
@@ -105,9 +105,13 @@ public class ResultsActivity extends Activity {
     }
 
     private TextView createStyledTextView() {
+        return createStyledTextView(1.0f);
+    }
+
+    private TextView createStyledTextView(float textViewWeight) {
         final TextView textView = new TextView(this);
         textView.setPadding(5, 5, 5, 5);
-        final TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
+        final TableRow.LayoutParams params = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, textViewWeight);
         textView.setLayoutParams(params);
         textView.setBackgroundResource(R.drawable.table_row);
 
@@ -233,7 +237,7 @@ public class ResultsActivity extends Activity {
     private TableRow createScoresDetailsColumnHeadersRows() {
         TableRow tableRow = createCenterAlignedTableRow();
 
-        tableRow.addView(createBoldCenteredTextView(R.string.pound_label));
+        tableRow.addView(createBoldCenteredTextView(R.string.pound_label, 0.25f));
         tableRow.addView(createBoldCenteredTextView(R.string.variables_column_name));
         tableRow.addView(createBoldCenteredTextView(R.string.number_of_questions_label));
         tableRow.addView(createBoldCenteredTextView(R.string.max_number_of_points));
@@ -264,11 +268,19 @@ public class ResultsActivity extends Activity {
     }
 
     private TextView createBoldCenteredTextView(int labelResourceId) {
-        return createBoldCenteredTextView(getString(labelResourceId));
+        return createBoldCenteredTextView(getString(labelResourceId), 1.0f);
     }
 
     private TextView createBoldCenteredTextView(String label) {
-        TextView textView = createStyledTextView();
+        return createBoldCenteredTextView(label, 1.0f);
+    }
+
+    private TextView createBoldCenteredTextView(int labelResourceId, float textViewWeight) {
+        return createBoldCenteredTextView(getString(labelResourceId), textViewWeight);
+    }
+
+    private TextView createBoldCenteredTextView(String label, float textViewWeight) {
+        TextView textView = createStyledTextView(textViewWeight);
         setGravityToCenter(textView);
         setToBold(textView);
         textView.setText(label);
