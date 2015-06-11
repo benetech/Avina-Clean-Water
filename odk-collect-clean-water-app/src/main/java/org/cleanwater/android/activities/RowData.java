@@ -8,96 +8,81 @@ import java.util.Set;
  */
 public class RowData {
     private String groupReference;
-    private String groupName;
-    private LinkedHashMap<String, String> questionsToAnswerRowsMap;
+    private String groupLabel;
+    private LinkedHashMap<String, Double> questionToAnswerRowsMap;
     private int questionCount;
 
-    public RowData(String groupReferenceToUse, String groupNameToUse) {
+    public RowData(String groupReferenceToUse, String groupLabelToUse) {
         groupReference = groupReferenceToUse;
-        groupName = groupNameToUse;
-        questionsToAnswerRowsMap = new LinkedHashMap();
+        groupLabel = groupLabelToUse;
+        questionToAnswerRowsMap = new LinkedHashMap();
     }
 
-    public void put(String question, String answer) {
-        questionsToAnswerRowsMap.put(question, answer);
+    public void put(String question, Double answer) {
+        questionToAnswerRowsMap.put(question, answer);
+    }
+
+    public void putAll(LinkedHashMap questionsToAnswersMap) {
+        getQuestionToAnswerRowsMap().putAll(questionsToAnswersMap);
     }
 
     public String getGroupReference() {
         return groupReference;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getGroupLabel() {
+        return groupLabel;
     }
 
-    public float calculatePercentageAsDecimal() {
-        float questionsWithAnswersCount = getQuestionsWithAnswersCount();
-        float questionCount = getAnsweredQuestionCount();
+    public double calculatePercentageAsDecimal() {
+        double questionsWithAnswersCount = calculateScore();
+        float questionCount = getMaxScore();
         if (questionCount == 0)
             return 0;
 
         return questionsWithAnswersCount / questionCount;
     }
 
-    public int getQuestionsWithAnswersCount() {
-        Set<String> keys = questionsToAnswerRowsMap.keySet();
-        int questionsWithAnswersCount = 0;
+    public double calculateScore() {
+        Set<String> keys = questionToAnswerRowsMap.keySet();
+        double questionsWithAnswersCount = 0;
         for (String key : keys) {
-            String answer = questionsToAnswerRowsMap.get(key);
-            if (answer == null || answer.isEmpty())
-                continue;
-            else
-                ++questionsWithAnswersCount;
+            Double answer = questionToAnswerRowsMap.get(key);
+            questionsWithAnswersCount += answer;
         }
 
         return questionsWithAnswersCount;
     }
 
-    private float calculatePercentage() {
+    private double calculatePercentage() {
         return calculatePercentageAsDecimal() * 100;
     }
 
     public int calculatePercentageAsRoundedInt() {
-        return Math.round(calculatePercentage());
-    }
-
-    public int calculateScore() {
-        return calculateScore(getQuestionsWithAnswersCount());
-    }
-
-    private int getAnsweredQuestionCount() {
-        return questionsToAnswerRowsMap.size();
+        return (int) Math.round(calculatePercentage());
     }
 
     public void setQuestionCount(int questionCount) {
         this.questionCount = questionCount;
     }
 
-    public int getTotalQuestionCount() {
+    public int getQuestionCount() {
         return questionCount;
     }
 
     public int getMaxScore() {
-        return calculateScore(getTotalQuestionCount());
+        return getQuestionCount() * 2;
     }
 
-    private int calculateScore(final int questionCount) {
-        return questionCount * 2;
-    }
-
-    public LinkedHashMap<String, String> getQuestionsToAnswerRowsMap() {
-        return questionsToAnswerRowsMap;
-    }
-
-    public void putAll(LinkedHashMap questionsToAnswersMap) {
-        getQuestionsToAnswerRowsMap().putAll(questionsToAnswersMap);
+    public LinkedHashMap<String, Double> getQuestionToAnswerRowsMap() {
+        return questionToAnswerRowsMap;
     }
 
     public boolean hasQuestions() {
-        return getQuestionsToAnswerRowsMap().size() > 0;
+        return !getQuestionToAnswerRowsMap().isEmpty();
     }
 
-    public boolean hasQuestionsWithAnswers() {
-        return getQuestionsWithAnswersCount() > 0;
+    public boolean hasScore() {
+        return calculateScore() > 0;
     }
 }

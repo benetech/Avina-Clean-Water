@@ -10,34 +10,29 @@ import org.cleanwater.android.activities.RowData;
 public class TestRowData extends TestCase {
 
     public void testBasics() {
-        verifyBasics(0, 0, 0, false);
-        verifyBasics(0, 1, 0, false);
-        verifyBasics(33, 3, 1, true);
-        verifyBasics(50, 2, 1, true);
-        verifyBasics(100, 1, 1, true);
+        verifyBasics(0,   0.0, 0, new double[]{}, false);
+        verifyBasics(0,   0.0, 1, new double[]{0, }, false);
+        verifyBasics(17,  1.0, 3, new double[]{0, 1, }, true);
+        verifyBasics(38,  1.5, 2, new double[]{1, 0.5, }, true);
+        verifyBasics(100, 2.0, 1, new double[]{2, }, true);
     }
 
-    private void verifyBasics(int expectedPercentage, int numberOfQuestions, int numberOfQuestionsWithAnswers, boolean expectedHasQuestionsWithAnswers) {
+    private void verifyBasics(int expectedPercentage, double expectedScore,  int numberOfQuestions, double[] numberOfQuestionsWithAnswers, boolean expectedHasQuestionsWithAnswers) {
         RowData rowData = new RowData("/some/random/groupReference", "Test Group");
-        fillUpRowData(rowData, numberOfQuestions, numberOfQuestionsWithAnswers);
-        int percentage = rowData.calculatePercentageAsRoundedInt();
-        assertEquals("Incorrect percentage?", expectedPercentage, percentage);
-
-        assertEquals("Incorrect number of questions with answers?", numberOfQuestionsWithAnswers, rowData.getQuestionsWithAnswersCount());
-        assertEquals("Incorrect score?", numberOfQuestionsWithAnswers * 2, rowData.calculateScore());
-
         rowData.setQuestionCount(numberOfQuestions);
+        fillUpRowData(rowData, numberOfQuestions, numberOfQuestionsWithAnswers);
+        assertEquals("Incorrect has questions response?", expectedHasQuestionsWithAnswers, rowData.hasQuestions());
+        assertEquals("Incorrect percentage?", expectedPercentage, rowData.calculatePercentageAsRoundedInt());
+        assertEquals("Incorrect number of questions with answers?", expectedScore, rowData.calculateScore());
         assertEquals("Incorrect max score?", numberOfQuestions * 2, rowData.getMaxScore());
-
-        assertEquals("Incorrect return value for hasQuestions with answers", expectedHasQuestionsWithAnswers, rowData.hasQuestionsWithAnswers());
     }
 
-    private void fillUpRowData(RowData rowData, int numberOfQuestions, int numberOfQuestionsWithAnswers) {
+    private void fillUpRowData(RowData rowData, int numberOfQuestions, double[] numberOfQuestionsWithAnswers) {
         for (int index = 0; index < numberOfQuestions; ++index) {
-            if (index < numberOfQuestionsWithAnswers)
-                rowData.put("question #" + index, "answer #"  +index);
+            if (index < numberOfQuestionsWithAnswers.length)
+                rowData.put("question #" + index, numberOfQuestionsWithAnswers[index]);
             else
-                rowData.put("question #" + index, "");
+                rowData.put("question #" + index, 0.0);
         }
     }
 }

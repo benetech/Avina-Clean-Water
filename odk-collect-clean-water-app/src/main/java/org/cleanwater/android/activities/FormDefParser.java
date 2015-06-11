@@ -49,7 +49,7 @@ public class FormDefParser {
                 continue;
 
             RowData rowDataWithQuestionsAndAnswers = createRowData(formEntryController, rowDat.getGroupReference(), formEntryCaption.getShortText());
-            LinkedHashMap questionsToAnswersMap = rowDataWithQuestionsAndAnswers.getQuestionsToAnswerRowsMap();
+            LinkedHashMap questionsToAnswersMap = rowDataWithQuestionsAndAnswers.getQuestionToAnswerRowsMap();
             rowDat.putAll(questionsToAnswersMap);
         }
 
@@ -91,7 +91,8 @@ public class FormDefParser {
                 continue;
 
             String answer = selection.getValue();
-            rowData.put(formEntryPrompt.getQuestionText(), answer);
+            Double answerAsDouble = Double.parseDouble(answer);
+            rowData.put(formEntryPrompt.getQuestionText(), answerAsDouble);
         }
 
         return rowData;
