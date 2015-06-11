@@ -149,7 +149,7 @@ public class ResultsActivity extends Activity {
         float totalPercentages = 0;
         int totalScore = 0;
         int questionsWithAnswers = 0;
-        for (RowData groupReference : rowDataList) {
+        for (RowData rowData : rowDataList) {
             TableRow tableRow = createTableRow();
 
             TextView nameCell = createStyledTextView();
@@ -161,16 +161,16 @@ public class ResultsActivity extends Activity {
             setGravityToCenter(percentCell);
             setGravityToCenter(stageCell);
 
-            nameCell.setText(groupReference.getGroupName());
+            nameCell.setText(rowData.getGroupName());
             scoreCell.setText(getString(R.string.non_applicable));
             percentCell.setText(getString(R.string.non_applicable));
 
-            if (groupReference.hasQuestions()) {
-                totalScore += groupReference.calculateScore();
-                scoreCell.setText(Integer.toString(groupReference.calculateScore()));
+            if (rowData.hasQuestions()) {
+                totalScore += rowData.calculateScore();
+                scoreCell.setText(Integer.toString(rowData.calculateScore()));
 
                 IntegerPercentFormatter formatter = new IntegerPercentFormatter();
-                final float calculatedPercentage = groupReference.calculatePercentageAsDecimal();
+                final float calculatedPercentage = rowData.calculatePercentageAsDecimal();
                 totalPercentages += calculatedPercentage;
                 String formattedPercentValue = formatter.getFormattedValue(calculatedPercentage);
                 percentCell.setText(formattedPercentValue);
@@ -183,7 +183,7 @@ public class ResultsActivity extends Activity {
                 setBackgroundToColorWithoutLoosingBorder(stageCell, summaryCellValues);
                 stageCell.setText(summaryCellValues.getLabelResourceId());
 
-                if (groupReference.hasQuestionsWithAnswers())
+                if (rowData.hasQuestionsWithAnswers())
                     ++questionsWithAnswers;
             }
 
