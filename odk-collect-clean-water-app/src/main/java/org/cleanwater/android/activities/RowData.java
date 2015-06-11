@@ -96,4 +96,8 @@ public class RowData {
     public boolean hasQuestions() {
         return getQuestionsToAnswerRowsMap().size() > 0;
     }
+
+    public boolean hasQuestionsWithAnswers() {
+        return getQuestionsWithAnswersCount() > 0;
+    }
 }

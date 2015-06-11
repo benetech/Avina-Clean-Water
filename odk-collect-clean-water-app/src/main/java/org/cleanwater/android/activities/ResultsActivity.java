@@ -148,6 +148,7 @@ public class ResultsActivity extends Activity {
 
         float totalPercentages = 0;
         int totalScore = 0;
+        int questionsWithAnswers = 0;
         for (RowData groupReference : rowDataList) {
             TableRow tableRow = createTableRow();
 
@@ -181,6 +182,9 @@ public class ResultsActivity extends Activity {
 
                 setBackgroundToColorWithoutLoosingBorder(stageCell, summaryCellValues);
                 stageCell.setText(summaryCellValues.getLabelResourceId());
+
+                if (groupReference.hasQuestionsWithAnswers())
+                    ++questionsWithAnswers;
             }
 
             tableRow.addView(nameCell);
@@ -206,7 +210,7 @@ public class ResultsActivity extends Activity {
         TextView totalPercentCell = createStyledTextView();
         totalPercentCell.setGravity(Gravity.RIGHT);
         totalPercentCell.setTextColor(getResources().getColor(R.color.barchart_color));
-        float percentAsDecimal = totalPercentages / rowDataList.size();
+        float percentAsDecimal = totalPercentages / questionsWithAnswers;
         IntegerPercentFormatter formatter = new IntegerPercentFormatter();
         totalPercentCell.setText(formatter.getFormattedValue(percentAsDecimal));
         totalsRow.addView(totalPercentCell);
