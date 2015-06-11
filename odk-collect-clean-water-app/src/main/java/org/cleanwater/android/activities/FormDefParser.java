@@ -129,15 +129,14 @@ public class FormDefParser {
     }
 
     private ArrayList<String> getGroupReferencesToSkipAsList() {
-        return new ArrayList(Arrays.asList(getGroupReferencesToSkip()));
-    }
-
-    private String[] getGroupReferencesToSkip() {
-        return new String[] {
+        String[] groupReferencesToSkip = new String[]{
                 "/AVINA_Pedro/personalization_group",
                 "/AVINA_Pedro/personalization_note",
                 "/AVINA_Pedro/which_groups",
                 "/AVINA_Pedro/photos_group",
         };
+        
+        return new ArrayList(Arrays.asList(groupReferencesToSkip));
     }
+
 }
