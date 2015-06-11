@@ -5,6 +5,8 @@ import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.IFormElement;
 import org.javarosa.core.model.QuestionDef;
+import org.javarosa.core.model.data.IAnswerData;
+import org.javarosa.core.model.data.helper.Selection;
 import org.javarosa.form.api.FormEntryCaption;
 import org.javarosa.form.api.FormEntryController;
 import org.javarosa.form.api.FormEntryModel;
@@ -46,7 +48,7 @@ public class FormDefParser {
             if (formEntryCaption == null)
                 continue;
 
-            RowData rowDataWithQuestionsAndAnswers = createGroupColumn(formEntryController, rowDat.getGroupReference(), formEntryCaption.getShortText());
+            RowData rowDataWithQuestionsAndAnswers = createRowData(formEntryController, rowDat.getGroupReference(), formEntryCaption.getShortText());
             LinkedHashMap questionsToAnswersMap = rowDataWithQuestionsAndAnswers.getQuestionsToAnswerRowsMap();
             rowDat.putAll(questionsToAnswersMap);
         }
@@ -70,13 +72,28 @@ public class FormDefParser {
         return null;
     }
 
-    private RowData createGroupColumn(FormEntryController formEntryController, String groupReference, String label) {
+    private RowData createRowData(FormEntryController formEntryController, String groupReference, String label) {
         RowData rowData = new RowData(groupReference, label);
         while ((formEntryController.stepToNextEvent()) == FormEntryController.EVENT_QUESTION) {
             FormEntryPrompt formEntryPrompt = formEntryController.getModel().getQuestionPrompt();
-            if (shouldIncludeQuestionType(formEntryPrompt.getControlType()))
-                rowData.put(formEntryPrompt.getQuestionText(), formEntryPrompt.getAnswerText());
+            if (!shouldIncludeQuestionType(formEntryPrompt.getControlType()))
+                continue;
+
+            IAnswerData answerValue = formEntryPrompt.getAnswerValue();
+            if (answerValue == null)
+                continue;
+
+            if (formEntryPrompt.getControlType() != Constants.CONTROL_SELECT_ONE)
+                continue;
+
+            Selection selection = (Selection) answerValue.getValue();
+            if (selection == null)
+                continue;
+
+            String answer = selection.getValue();
+            rowData.put(formEntryPrompt.getQuestionText(), answer);
         }
+
         return rowData;
     }
 
