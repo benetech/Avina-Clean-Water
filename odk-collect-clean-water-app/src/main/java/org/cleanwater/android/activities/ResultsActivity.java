@@ -348,6 +348,7 @@ public class ResultsActivity extends Activity {
 
         ArrayList<RowData> rowDataList = getFormDefParser().getGroupReferences();
         BarChart barChart = (BarChart) findViewById(R.id.results_bar_chart);
+        barChart.setDescription(null);
         barChart.getLegend().setEnabled(false);
 
         customizeXAxis(barChart);
