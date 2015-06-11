@@ -348,6 +348,7 @@ public class ResultsActivity extends Activity {
 
         ArrayList<RowData> rowDataList = getFormDefParser().getGroupReferences();
         BarChart barChart = (BarChart) findViewById(R.id.results_bar_chart);
+        barChart.setTouchEnabled(false);
         barChart.setDescription(null);
         barChart.getLegend().setEnabled(false);
 
@@ -363,6 +364,7 @@ public class ResultsActivity extends Activity {
         ArrayList<BarEntry> barEntries = new ArrayList();
         float totalPercentage = 0;
         int questionsWithAnswers = 0;
+
         for (int index = 0; index < rowDataList.size(); ++index) {
             RowData rowData = rowDataList.get(index);
             if (rowData.hasQuestionsWithAnswers())
@@ -378,11 +380,14 @@ public class ResultsActivity extends Activity {
             return new BarData(getXAxisStaticNames(), new ArrayList<BarDataSet>());
 
         totalPercentage = totalPercentage / questionsWithAnswers;
+        int roundedPercentage = Math.round(totalPercentage * 100);
+        AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(roundedPercentage);
+
         BarEntry barEntry = new BarEntry(totalPercentage, rowDataList.size());
         barEntries.add(barEntry);
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
-        barDataSet.setColor(getResources().getColor(R.color.barchart_color));
+        barDataSet.setColor(getResources().getColor(summaryCellValues.getColorResourceId()));
         ArrayList<BarDataSet> barDataSets = new ArrayList();
         barDataSets.add(barDataSet);
 
