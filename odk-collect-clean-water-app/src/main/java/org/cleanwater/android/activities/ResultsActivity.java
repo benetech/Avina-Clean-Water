@@ -55,8 +55,8 @@ public class ResultsActivity extends Activity {
             RowData groupReference = rowDataList.get(index);
             TableRow tableRow = createTableRow();
 
-            TextView indexCell = createStyledTextView(0.25f);
-            TextView variableCell = createStyledTextView();
+            TextView indexCell = createStyledTextView(getIndexColumnWeight());
+            TextView variableCell = createStyledTextView(getVariableColumnWeight());
             TextView numberOfScoresCell = createStyledTextView();
             TextView maxScoreCell = createStyledTextView();
             TextView risingCell = createStyledTextView();
@@ -102,6 +102,14 @@ public class ResultsActivity extends Activity {
         }
 
         fillTable(tableRows, R.id.scores_details_table);
+    }
+
+    private float getIndexColumnWeight() {
+        return 0.25f;
+    }
+
+    private float getVariableColumnWeight() {
+        return 1.5f;
     }
 
     private TextView createStyledTextView() {
@@ -237,8 +245,8 @@ public class ResultsActivity extends Activity {
     private TableRow createScoresDetailsColumnHeadersRows() {
         TableRow tableRow = createCenterAlignedTableRow();
 
-        tableRow.addView(createBoldCenteredTextView(R.string.pound_label, 0.25f));
-        tableRow.addView(createBoldCenteredTextView(R.string.variables_column_name));
+        tableRow.addView(createBoldCenteredTextView(R.string.pound_label, getIndexColumnWeight()));
+        tableRow.addView(createBoldCenteredTextView(R.string.variables_column_name, getVariableColumnWeight()));
         tableRow.addView(createBoldCenteredTextView(R.string.number_of_questions_label));
         tableRow.addView(createBoldCenteredTextView(R.string.max_number_of_points));
         tableRow.addView(createColumnHeaderCellWithMultiLabels(new RisingCellValues()));
