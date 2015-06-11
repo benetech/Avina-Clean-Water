@@ -52,7 +52,7 @@ public class ResultsActivity extends Activity {
         tableRows.add(createScoresDetailsColumnHeadersRows());
 
         for (int index = 0; index < rowDataList.size(); ++index) {
-            RowData groupReference = rowDataList.get(index);
+            RowData rowData = rowDataList.get(index);
             TableRow tableRow = createTableRow();
 
             TextView indexCell = createStyledTextView(getIndexColumnWeight());
@@ -69,14 +69,14 @@ public class ResultsActivity extends Activity {
             setGravityToCenter(maxScoreCell);
 
             indexCell.setText(Integer.toString(index + 1));
-            variableCell.setText(groupReference.getGroupName());
-            numberOfScoresCell.setText(Integer.toString(groupReference.getTotalQuestionCount()));
-            maxScoreCell.setText(Integer.toString(groupReference.getMaxScore()));
+            variableCell.setText(rowData.getGroupName());
+            numberOfScoresCell.setText(Integer.toString(rowData.getTotalQuestionCount()));
+            maxScoreCell.setText(Integer.toString(rowData.getMaxScore()));
 
-            if (groupReference.hasQuestions()) {
-                int percentage = groupReference.calculatePercentageAsRoundedInt();
+            if (rowData.hasQuestions()) {
+                int percentage = rowData.calculatePercentageAsRoundedInt();
                 AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(percentage);
-                int score = groupReference.calculateScore();
+                int score = rowData.calculateScore();
                 if (summaryCellValues != null) {
                     if (summaryCellValues.isRisingCell())
                         configureCell(risingCell, score, summaryCellValues);
