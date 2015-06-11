@@ -26,9 +26,10 @@ public class FormDefParser {
         FormDef formDef = getFormDef();
 
         List<IFormElement> children = formDef.getChildren();
+        String rootElementName = formDef.getInstance().getRoot().getName();
         for (IFormElement child : children) {
             String groupReference = child.getBind().getReference().toString();
-            if (shouldSkipGroup(groupReference))
+            if (shouldSkipGroup(rootElementName, groupReference))
                 continue;
 
             RowData rowData = new RowData(groupReference, child.getLabelInnerText());
@@ -84,8 +85,8 @@ public class FormDefParser {
         return formController.getFormDef();
     }
 
-    private boolean shouldSkipGroup(String groupReferenceName) {
-        return getGroupReferencesToSkipAsList().contains(groupReferenceName);
+    private boolean shouldSkipGroup(String rootName, String groupReferenceName) {
+        return getGroupReferencesToSkipAsList(rootName).contains(groupReferenceName);
     }
 
     private int countQuestions(IFormElement parent) {
@@ -128,15 +129,19 @@ public class FormDefParser {
         return false;
     }
 
-    private ArrayList<String> getGroupReferencesToSkipAsList() {
+    private ArrayList<String> getGroupReferencesToSkipAsList(String rootName) {
         String[] groupReferencesToSkip = new String[]{
-                "/AVINA_Pedro/personalization_group",
-                "/AVINA_Pedro/personalization_note",
-                "/AVINA_Pedro/which_groups",
-                "/AVINA_Pedro/photos_group",
+                createGroupReference(rootName, "personalization_group"),
+                createGroupReference(rootName, "personalization_note"),
+                createGroupReference(rootName, "which_groups"),
+                createGroupReference(rootName, "photos_group"),
         };
-        
+
         return new ArrayList(Arrays.asList(groupReferencesToSkip));
+    }
+
+    private String createGroupReference(String rootName, String personalization_group) {
+        return "/" + rootName + "/" + personalization_group;
     }
 
 }
