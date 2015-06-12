@@ -81,8 +81,4 @@ public class RowData {
     public boolean hasQuestions() {
         return !getQuestionToAnswerRowsMap().isEmpty();
     }
-
-    public boolean hasScore() {
-        return calculateScore() > 0;
-    }
 }
