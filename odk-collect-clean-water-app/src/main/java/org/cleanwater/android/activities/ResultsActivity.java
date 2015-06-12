@@ -148,7 +148,7 @@ public class ResultsActivity extends Activity {
 
         float totalPercentages = 0;
         double totalScore = 0;
-        int questionsWithAnswers = 0;
+        int questionsWithScores = 0;
         for (RowData rowData : rowDataList) {
             TableRow tableRow = createTableRow();
 
@@ -183,8 +183,7 @@ public class ResultsActivity extends Activity {
                 setBackgroundToColorWithoutLoosingBorder(stageCell, summaryCellValues);
                 stageCell.setText(summaryCellValues.getLabelResourceId());
 
-                if (rowData.hasScore())
-                    ++questionsWithAnswers;
+                ++questionsWithScores;
             }
 
             tableRow.addView(nameCell);
@@ -210,7 +209,7 @@ public class ResultsActivity extends Activity {
         TextView totalPercentCell = createStyledTextView();
         totalPercentCell.setGravity(Gravity.RIGHT);
         totalPercentCell.setTextColor(getResources().getColor(R.color.barchart_color));
-        float percentAsDecimal = totalPercentages / questionsWithAnswers;
+        float percentAsDecimal = totalPercentages / questionsWithScores;
         IntegerPercentFormatter formatter = new IntegerPercentFormatter();
         totalPercentCell.setText(formatter.getFormattedValue(percentAsDecimal));
         totalsRow.addView(totalPercentCell);
@@ -362,16 +361,19 @@ public class ResultsActivity extends Activity {
 
     private BarData createBarChartData(ArrayList<RowData> rowDataList) {
         ArrayList<BarEntry> barEntries = new ArrayList();
+        ArrayList<Integer> barColors = new ArrayList<>();
         float totalPercentage = 0;
-        int questionsWithAnswers = 0;
-
+        int quetionsWithScores = 0;
         for (int index = 0; index < rowDataList.size(); ++index) {
             RowData rowData = rowDataList.get(index);
-            if (rowData.hasScore())
-                ++questionsWithAnswers;
-
             double percentOfQuestionsWithAnswers = rowData.calculatePercentageAsDecimal();
-            totalPercentage += percentOfQuestionsWithAnswers;
+            AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(rowData.calculatePercentageAsRoundedInt());
+            barColors.add(getResources().getColor(summaryCellValues.getColorResourceId()));
+            if (rowData.hasQuestions()) {
+                totalPercentage += percentOfQuestionsWithAnswers;
+                ++quetionsWithScores;
+            }
+
             BarEntry barEntry = new BarEntry((float) percentOfQuestionsWithAnswers, index);
             barEntries.add(barEntry);
         }
@@ -379,15 +381,16 @@ public class ResultsActivity extends Activity {
         if (rowDataList.size() == 0)
             return new BarData(getXAxisStaticNames(), new ArrayList<BarDataSet>());
 
-        totalPercentage = totalPercentage / questionsWithAnswers;
-        int roundedPercentage = Math.round(totalPercentage * 100);
+        double averagePercentage = totalPercentage / quetionsWithScores;
+        int roundedPercentage = (int) Math.round(averagePercentage * 100);
         AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(roundedPercentage);
+        barColors.add(getResources().getColor(summaryCellValues.getColorResourceId()));
 
-        BarEntry barEntry = new BarEntry(totalPercentage, rowDataList.size());
+        BarEntry barEntry = new BarEntry((float) averagePercentage, rowDataList.size());
         barEntries.add(barEntry);
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "");
-        barDataSet.setColor(getResources().getColor(summaryCellValues.getColorResourceId()));
+        barDataSet.setColors(barColors);
         ArrayList<BarDataSet> barDataSets = new ArrayList();
         barDataSets.add(barDataSet);
 
