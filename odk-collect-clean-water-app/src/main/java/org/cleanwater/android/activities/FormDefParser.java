@@ -44,7 +44,6 @@ public class FormDefParser {
         FormEntryController formEntryController = new FormEntryController(model);
         for (RowData rowDat : rowDataList) {
             FormEntryCaption formEntryCaption = findFormEntryCaption(formEntryController, rowDat.getGroupReference());
-
             if (formEntryCaption == null)
                 continue;
 
@@ -65,7 +64,6 @@ public class FormDefParser {
                 String groupReference = formEntryCaption.getFormElement().getBind().getReference().toString();
                 if (referencesToMatch.equals(groupReference))
                     return formEntryCaption;
-
             }
         }
 
