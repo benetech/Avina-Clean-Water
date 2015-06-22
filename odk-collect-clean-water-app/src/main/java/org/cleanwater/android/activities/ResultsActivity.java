@@ -213,8 +213,7 @@ public class ResultsActivity extends Activity {
 
         TextView totalStageCell = createStyledTextView();
         setGravityToCenter(totalStageCell);
-        final double calculatedPercentage = percentAsDecimal * 100;
-        final int calculatedRoundedPercentage = Math.round((float)calculatedPercentage);
+        final int calculatedRoundedPercentage = convertToRoundedPercent(percentAsDecimal);
         final AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(calculatedRoundedPercentage);
         setBackgroundToColorWithoutLoosingBorder(totalStageCell, summaryCellValues);
         totalStageCell.setText(summaryCellValues.getLabelResourceId());
@@ -223,6 +222,10 @@ public class ResultsActivity extends Activity {
         allRows.add(totalsRow);
 
         fillTable(allRows, R.id.scores_summary_table);
+    }
+
+    private int convertToRoundedPercent(double percentAsDecimal) {
+        return (int) Math.round(percentAsDecimal * 100);
     }
 
     private void fillTable(ArrayList<TableRow> allRows, int tableResourceId) {
@@ -354,6 +357,7 @@ public class ResultsActivity extends Activity {
         double totalMaxScore = 0;
         for (int index = 0; index < rowDataList.size(); ++index) {
             RowData rowData = rowDataList.get(index);
+
             double percentOfQuestionsWithAnswers = rowData.calculatePercentageAsDecimal();
             AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(rowData.calculatePercentageAsRoundedInt());
             barColors.add(getResources().getColor(summaryCellValues.getColorResourceId()));
@@ -370,7 +374,7 @@ public class ResultsActivity extends Activity {
             return new BarData(getXAxisStaticNames(), new ArrayList<BarDataSet>());
 
         double averagePercentage = totalScore / totalMaxScore;
-        int roundedPercentage = (int) Math.round(averagePercentage * 100);
+        int roundedPercentage = convertToRoundedPercent(averagePercentage);
         AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(roundedPercentage);
         barColors.add(getResources().getColor(summaryCellValues.getColorResourceId()));
 
@@ -390,6 +394,7 @@ public class ResultsActivity extends Activity {
 
     private void customizeYAxis(BarChart chart) {
         YAxis yAxis = chart.getAxisLeft();
+        yAxis.setDrawLabels(false);
         yAxis.setTextSize(10f);
         yAxis.setAxisMaxValue(1.0f);
         yAxis.setTextColor(Color.BLACK);
