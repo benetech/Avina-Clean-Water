@@ -207,7 +207,7 @@ public class ResultsActivity extends Activity {
         totalPercentCell.setGravity(Gravity.RIGHT);
         totalPercentCell.setTextColor(getResources().getColor(R.color.barchart_color));
         IntegerPercentFormatter formatter = new IntegerPercentFormatter();
-        double percentAsDecimal = totalScore / totalMaxScore;
+        double percentAsDecimal = calculatePercentAsDecimal(totalScore, totalMaxScore);
         totalPercentCell.setText(formatter.getFormattedValue((float)percentAsDecimal));
         totalsRow.addView(totalPercentCell);
 
@@ -222,6 +222,10 @@ public class ResultsActivity extends Activity {
         allRows.add(totalsRow);
 
         fillTable(allRows, R.id.scores_summary_table);
+    }
+
+    private double calculatePercentAsDecimal(double totalScore, double totalMaxScore) {
+        return totalScore / totalMaxScore;
     }
 
     private int convertToRoundedPercent(double percentAsDecimal) {
@@ -373,7 +377,7 @@ public class ResultsActivity extends Activity {
         if (rowDataList.size() == 0)
             return new BarData(getXAxisStaticNames(), new ArrayList<BarDataSet>());
 
-        double averagePercentage = totalScore / totalMaxScore;
+        double averagePercentage = calculatePercentAsDecimal(totalScore, totalMaxScore);
         int roundedPercentage = convertToRoundedPercent(averagePercentage);
         AbstractSummaryCellValues summaryCellValues = AbstractSummaryCellValues.createSummaryCellValues(roundedPercentage);
         barColors.add(getResources().getColor(summaryCellValues.getColorResourceId()));
